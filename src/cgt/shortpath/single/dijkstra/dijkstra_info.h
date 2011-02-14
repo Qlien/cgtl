@@ -75,6 +75,8 @@ namespace cgt
               const bool operator!=(const _DijkstraInfo& _d) const { return ! (*this == _d); }
               const bool operator<(const _DijkstraInfo& _d) const { return (! inf_distance () && (_d.inf_distance () || distance () < _d.distance ())); }
               const bool operator<=(const _DijkstraInfo& _d) const { return (! inf_distance () && (_d.inf_distance () || distance () <= _d.distance ())); }
+              const bool operator>(const _DijkstraInfo& _d) const { return ! operator<=(_d); }
+              const bool operator>=(const _DijkstraInfo& _d) const { return ! operator<(_d); }
 
             public:
               _Node& node () const { return _node; }

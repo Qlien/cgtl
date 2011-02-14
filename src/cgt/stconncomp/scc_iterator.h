@@ -132,12 +132,18 @@ namespace cgt
             public:
               _SCC_DFSInfo (_DFSInfo& _i) : _info (_i) { }
 
+			public:
+			  _SCC_DFSInfo& operator=(const _SCC_DFSInfo& _s) { _info = _s._info; return *this; }
+
             public:
               const _DFSInfo& info () const { return _info; }
               _Node& node () { return _info.node (); }
 
             public:
-              const bool operator<(const _SCC_DFSInfo& _b) const { return _info.finish () >= _b._info.finish (); }
+              const bool operator<(const _SCC_DFSInfo& _b) const { return _info.finish () > _b._info.finish (); }
+              const bool operator<=(const _SCC_DFSInfo& _b) const { return _info.finish () >= _b._info.finish (); }
+              const bool operator>(const _SCC_DFSInfo& _b) const { return ! operator<=(_b); }
+              const bool operator>=(const _SCC_DFSInfo& _b) const { return ! operator<(_b); }
 
             private:
               _DFSInfo& _info;

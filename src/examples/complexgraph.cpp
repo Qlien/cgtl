@@ -34,7 +34,9 @@ class Edge
   public:
     const double& operator()() const { return mE; }
     const bool operator<(const Edge& other) const { return (mE < other.mE); }
-    const bool operator>(const Edge& other) const { return (mE > other.mE); }
+    const bool operator<=(const Edge& other) const { return (mE <= other.mE); }
+    const bool operator>(const Edge& other) const { return ! operator<=(other); }
+    const bool operator>=(const Edge& other) const { return ! operator<(other); }
     Edge operator+(const Edge& other) const { return Edge (mE + other.mE); }
 
   public:

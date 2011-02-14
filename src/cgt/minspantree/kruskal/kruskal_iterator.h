@@ -106,7 +106,12 @@ namespace cgt
 
           private:
             typedef cgt::base::heap<_Edge*, _KruskalEdgeHeapInvariant>  _EdgeHeap;
+#ifdef CGTL_DO_NOT_USE_STL
             typedef cgt::base::vector<_SetInfo>                         _SetVector;
+#else
+            typedef std::vector<_SetInfo>                         _SetVector;
+#endif
+
             typedef cgt::base::hash<_Vertex*, size_t>                   _VertexSetHash;
 
           private:

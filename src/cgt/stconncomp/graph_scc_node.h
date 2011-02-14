@@ -54,6 +54,9 @@ namespace cgt
     template<typename _TpVertex, typename _TpEdge>
       class _GraphSCCNode
       {
+		  private:
+			  typedef _GraphSCCNode<_TpVertex, _TpEdge> _Self;
+
         private:
           typedef _GraphVertex<_TpVertex>           _Vertex;
           typedef _GraphNode<_TpVertex, _TpEdge>    _Node;
@@ -62,6 +65,9 @@ namespace cgt
 
         public:
           explicit _GraphSCCNode (_Node& _n) : _node (_n) { }
+
+		public:
+		  _Self& operator=(const _Self& _s);
 
         public:
           void _insert (_Edge& _e, _Node& _n) { _adjList._insert (_e, _n); }
@@ -75,6 +81,15 @@ namespace cgt
           _Node&    _node;
           _AdjList  _adjList;
       };
+
+	template<typename _TpVertex, typename _TpEdge>
+		_GraphSCCNode<_TpVertex, _TpEdge>& _GraphSCCNode<_TpVertex, _TpEdge>::operator=(const _GraphSCCNode<_TpVertex, _TpEdge>& _s)
+		{
+			_node = _s._node;
+			_adjList = _s._adjList;
+
+			return *this;
+		}
   }
 }
 

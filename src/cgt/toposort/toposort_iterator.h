@@ -144,7 +144,11 @@ namespace cgt
       {
         /*! insert all nodes into auxiliary graph */
         for (_NodeIterator _it = _it_begin; _it != _it_end; ++_it)
+#ifdef CGTL_DO_NOT_USE_STL
           _auxGraph.insert (_TSNode (*_it));
+#else
+          _auxGraph.insert (_auxGraph.end (), _TSNode (*_it));
+#endif
 
         /*! insert all edges into auxiliary graph */
 

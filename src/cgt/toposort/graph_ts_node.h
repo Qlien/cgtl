@@ -54,6 +54,9 @@ namespace cgt
     template<typename _TpVertex, typename _TpEdge>
       class _GraphTSNode
       {
+		  private:
+			  typedef _GraphTSNode<_TpVertex, _TpEdge> _Self;
+
         private:
           typedef _GraphVertex<_TpVertex>           _Vertex;
           typedef _GraphNode<_TpVertex, _TpEdge>    _Node;
@@ -66,6 +69,9 @@ namespace cgt
 
         public:
           explicit _GraphTSNode (_Node& _n) : _node (_n) { }
+
+		public:
+		  _Self& operator=(const _Self& _s);
 
         public:
           const bool operator==(const _TSNode& _ts_node)
@@ -91,6 +97,16 @@ namespace cgt
           _Node&    _node;
           _AdjList  _invAdjList;
       };
+
+    template<typename _TpVertex, typename _TpEdge>
+      _GraphTSNode<_TpVertex, _TpEdge>& _GraphTSNode<_TpVertex, _TpEdge>::operator=(const _GraphTSNode<_TpVertex, _TpEdge>& _s)
+	  {
+		  _node = _s._node;
+		  _invAdjList = _s._invAdjList;
+
+		  return *this;
+	  }
+
   }
 }
 

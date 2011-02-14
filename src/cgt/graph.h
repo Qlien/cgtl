@@ -155,8 +155,9 @@ namespace cgt
       typedef typename _Base::const_iterator    const_iterator;
 
     public:
-      void insert_vertex (const _TpVertex &_vertex) { _insert_vertex (_vertex); }
+      iterator insert_vertex (const _TpVertex &_vertex) { return _insert_vertex (_vertex); }
       void insert_edge (const _TpEdge &_e, const _TpVertex &_v1, const _TpVertex &_v2) { _insert_edge (_e, _v1, _v2); }
+	  void insert_edge (const _TpEdge& _e, iterator& _it_v1, iterator& _it_v2) { _insert_edge (_e, _it_v1, _it_v2); }
 
     public:
       const node* get_node (const _TpVertex &_vertex) { return _Base::_get_node (_vertex); }

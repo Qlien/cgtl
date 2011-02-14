@@ -108,6 +108,9 @@ namespace cgt
       typedef std::list<_Edge>          _EdgeList;
 #endif
 
+	public:
+	  typedef typename _Base::iterator iterator;
+
     protected:
       /**
        * A method to get a node pointer by its vertex.
@@ -118,11 +121,28 @@ namespace cgt
 
       typename _Base::iterator _find (const _TpVertex &_vertex);
 
-    protected:
-      void _insert_node (const _TpVertex &_vertex);
-      void _insert_vertex (const _TpVertex &_vertex);
-      void _insert_edge (const _TpEdge &_e, const _TpVertex &_v1, const _TpVertex &_v2);
+	private:
+      void _insert_edge_if_not_exists (_Node* _n1, _Node* _n2, const _TpEdge& _e);
       void _insert_edge (_Node& _n1, _Node& _n2, _Vertex& _v1, _Vertex& _v2, _Edge& _e);
+
+    protected:
+#ifdef CGTL_DO_NOT_USE_STL
+      iterator _insert_node (const _TpVertex &_vertex) { return insert (_GraphNode<_TpVertex, _TpEdge> (_vertex)); }
+#else
+      iterator _insert_node (const _TpVertex &_vertex) { return insert (_Base::end (), _GraphNode<_TpVertex, _TpEdge> (_vertex)); }
+#endif
+      iterator _insert_vertex (const _TpVertex &_vertex)
+	  {
+		  iterator it = _find (_vertex);
+
+		  if (it == _Base::end ())
+			  it = _insert_node (_vertex);
+
+		  return it;
+	  }
+
+      void _insert_edge (const _TpEdge &_e, const _TpVertex &_v1, const _TpVertex &_v2);
+      void _insert_edge (const _TpEdge &_e, iterator& _it_v1, iterator& _it_v2);
 
     protected:
       void _invert ();
@@ -179,30 +199,9 @@ namespace cgt
       typename _Base::iterator itEnd = _Base::end ();
 
       while (it != itEnd && it->vertex () != _vertex)
-        it++;
+        ++it;
      
       return it;
-    }
-
-  template<typename _TpVertex, typename _TpEdge, typename _TpGraphType>
-    void _GraphAdjMatrix<_TpVertex, _TpEdge, _TpGraphType>::_insert_node (const _TpVertex &_vertex)
-    {
-#ifdef CGTL_DO_NOT_USE_STL
-      insert (_GraphNode<_TpVertex, _TpEdge> (_vertex));
-#else
-      insert (_Base::end (), _GraphNode<_TpVertex, _TpEdge> (_vertex));
-#endif
-    }
-
-  template<typename _TpVertex, typename _TpEdge, typename _TpGraphType>
-    void _GraphAdjMatrix<_TpVertex, _TpEdge, _TpGraphType>::_insert_vertex (const _TpVertex &_vertex)
-    {
-      _Node *_ptr = _get_node (_vertex);
-
-      if (! _ptr)
-        _insert_node (_vertex);
-      else
-        _BRK();
     }
 
   template<typename _TpVertex, typename _TpEdge, typename _TpGraphType>
@@ -215,22 +214,32 @@ namespace cgt
         _Node *_ptr_n2 = _get_node (_v2);
 
         if (_ptr_n2)
-        {
-          _Vertex& _vertex2 = _ptr_n2->vertex ();
-
-          if (! _ptr_n1->get_edge (_vertex2))
-          {
-            _Vertex& _vertex1 = _ptr_n1->vertex ();
-#ifdef CGTL_DO_NOT_USE_STL
-            _Edge &_edge = _edgeList.insert (_Edge (_e, _vertex1, _vertex2));
-#else
-            _Edge &_edge = *(_edgeList.insert (_edgeList.end (), _Edge (_e, _vertex1, _vertex2)));
-#endif
-            _insert_edge (*_ptr_n1, *_ptr_n2, _vertex1, _vertex2, _edge);
-          }
-        }
+			_insert_edge_if_not_exists (_ptr_n1, _ptr_n2, _e);
       }
     }
+
+  template<typename _TpVertex, typename _TpEdge, typename _TpGraphType>
+    void _GraphAdjMatrix<_TpVertex, _TpEdge, _TpGraphType>::_insert_edge (const _TpEdge &_e, iterator& _it_v1, iterator& _it_v2)
+	{
+	  _insert_edge_if_not_exists (&(*_it_v1), &(*_it_v2), _e);
+	}
+
+  template<typename _TpVertex, typename _TpEdge, typename _TpGraphType>
+    void _GraphAdjMatrix<_TpVertex, _TpEdge, _TpGraphType>::_insert_edge_if_not_exists (_Node* _ptr_n1, _Node* _ptr_n2, const _TpEdge& _e)
+	{
+		_Vertex& _vertex2 = _ptr_n2->vertex ();
+
+		if (! _ptr_n1->get_edge (_vertex2))
+		{
+			_Vertex& _vertex1 = _ptr_n1->vertex ();
+#ifdef CGTL_DO_NOT_USE_STL
+			_Edge &_edge = _edgeList.insert (_Edge (_e, _vertex1, _vertex2));
+#else
+			_Edge &_edge = *(_edgeList.insert (_edgeList.end (), _Edge (_e, _vertex1, _vertex2)));
+#endif
+			_insert_edge (*_ptr_n1, *_ptr_n2, _vertex1, _vertex2, _edge);
+		}
+	}
 
   template<typename _TpVertex, typename _TpEdge, typename _TpGraphType>
     void _GraphAdjMatrix<_TpVertex, _TpEdge, _TpGraphType>::_insert_edge (_Node& _n1, _Node& _n2, _Vertex& _v1, _Vertex& _v2, _Edge& _e)

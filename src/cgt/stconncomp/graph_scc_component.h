@@ -34,7 +34,11 @@
 #define __CGTL__CGT_STCONNCOMP__GRAPH_SCC_COMPONENT_H_
 
 #include "cgt/stconncomp/graph_scc_node.h"
+#ifdef CGTL_DO_NOT_USE_STL
 #include "cgt/base/list.h"
+#else
+#include <list>
+#endif
 
 
 namespace cgt
@@ -53,10 +57,18 @@ namespace cgt
      */
 
     template<typename _TpVertex, typename _TpEdge>
+#ifdef CGTL_DO_NOT_USE_STL
       class _GraphSCCComponent : public cgt::base::list<_GraphSCCNode<_TpVertex, _TpEdge> >
+#else
+      class _GraphSCCComponent : public std::list<_GraphSCCNode<_TpVertex, _TpEdge> >
+#endif
       {
         private:
+#ifdef CGTL_DO_NOT_USE_STL
           typedef cgt::base::list<_GraphSCCNode<_TpVertex, _TpEdge> > _Base;
+#else
+          typedef std::list<_GraphSCCNode<_TpVertex, _TpEdge> > _Base;
+#endif
           typedef typename _Base::iterator                  _Iterator;
 
         private:
@@ -65,7 +77,11 @@ namespace cgt
           typedef _GraphEdge<_TpVertex, _TpEdge>    _Edge;
 
         public:
+#ifdef CGTL_DO_NOT_USE_STL
           _GraphSCCComponent (const _SCCNode& _n) { _Base::insert (_n); }
+#else
+          _GraphSCCComponent (const _SCCNode& _n) { _Base::insert (_Base::end (), _n); }
+#endif
 
         public:
           void insert (const _SCCNode& _n);
@@ -75,7 +91,11 @@ namespace cgt
     template<typename _TpVertex, typename _TpEdge>
       void _GraphSCCComponent<_TpVertex, _TpEdge>::insert (const _SCCNode& _n)
       {
+#ifdef CGTL_DO_NOT_USE_STL
         _Base::insert (_n);
+#else
+        _Base::insert (_Base::end (), _n);
+#endif
 
         /*!
          * We need to add adjacencies between nodes that are linked in the
@@ -88,7 +108,11 @@ namespace cgt
          */
 
         _Edge* _ptr_edge = NULL;
+#ifdef CGTL_DO_NOT_USE_STL
         _SCCNode* _ptr_node = _Base::back ();
+#else
+        _SCCNode* _ptr_node = &(_Base::back ());
+#endif
         _Node& _n1 = _ptr_node->node ();
 
         _Iterator _itEnd = _Base::end ();

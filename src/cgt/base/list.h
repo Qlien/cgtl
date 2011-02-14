@@ -96,14 +96,14 @@ namespace cgt
         private:
           _Item* _allocate (const _TpItem& _item);
           void _deallocate (_Item* const _ptr);
-          _TpItem& _push_back (_Item* _ptr);
+          iterator _push_back (_Item* _ptr);
           _TpItem& _push_front (_Item* _ptr);
           void _unlink (const _Item* const _ptr);
           void _rebuild_heap (unsigned int i, _TpItem* _arrayItem[]);
 
         protected:
           _TpItem& _push_front (const _TpItem& _item);
-          _TpItem& _push_back (const _TpItem& _item);
+          iterator _push_back (const _TpItem& _item);
           _TpItem* _pop (_Item* _ptr_item);
           _TpItem* _get (_Item* _ptr_item) const;
           _Item* _find (const _TpItem& _item) const;
@@ -160,13 +160,13 @@ namespace cgt
       }
 
     template<typename _TpItem, typename _Alloc>
-      _TpItem& _List<_TpItem, _Alloc>::_push_back (const _TpItem& _item)
+      _ListIterator<_TpItem> _List<_TpItem, _Alloc>::_push_back (const _TpItem& _item)
       {
         return _push_back (_allocate (_item));
       }
 
     template<typename _TpItem, typename _Alloc>
-      _TpItem& _List<_TpItem, _Alloc>::_push_back (_Item *_ptr)
+      _ListIterator<_TpItem> _List<_TpItem, _Alloc>::_push_back (_Item *_ptr)
       {
         if (! _head)
           _head = _ptr;
@@ -179,7 +179,8 @@ namespace cgt
         _tail = _ptr;
         _size++;
 
-        return _ptr->_data;
+        //return _ptr->_data;
+		return iterator (_ptr);
       }
 
     template<typename _TpItem, typename _Alloc>
@@ -388,9 +389,11 @@ namespace cgt
         virtual ~list () { }
 
       public:
-        inline _TpItem& insert (const _TpItem& _item) { return _Base::_push_back (_item); }
+        //inline _TpItem& insert (const _TpItem& _item) { return _Base::_push_back (_item); }
+        inline typename _Base::iterator insert (const _TpItem& _item) { return _Base::_push_back (_item); }
         inline _TpItem& push_front (const _TpItem& _item) { return _Base::_push_front (_item); }
-        inline _TpItem& push_back (const _TpItem& _item) { return _Base::_push_back (_item); }
+        //inline _TpItem& push_back (const _TpItem& _item) { return _Base::_push_back (_item); }
+        inline typename _Base::iterator push_back (const _TpItem& _item) { return _Base::_push_back (_item); }
         inline _TpItem* pop_front () { return _pop (_Base::_head); }
         inline _TpItem* pop_back () {return _pop (_Base::_tail); }
         inline _TpItem* front () { return _get (_Base::_head); }

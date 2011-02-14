@@ -27,7 +27,7 @@ AC_TYPE_SIZE_T
 AC_CHECK_TYPES([ptrdiff_t])
 
 # CxxTest (cxxtest.tigris.org)
-AC_PATH_PROG([CXXTESTGEN], [cxxtestgen.pl], [cxxtestgen.pl], [/usr/local/cxxtest-3.10.1/cxxtest/cxxtestgen.pl])
+AC_PATH_PROG([CXXTESTGEN], [cxxtestgen.pl], [/usr/local/cxxtest-3.10.1/cxxtest/cxxtestgen.pl])
 
 DIR_CXXTEST_INC_DEFAULT='/usr/local/cxxtest-3.10.1/cxxtest'
 #DIR_CXXTEST_INC_DEFAULT='/usr/include'

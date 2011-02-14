@@ -50,13 +50,21 @@ namespace cgt
      */
 
     template<typename _TpVertex, typename _TpEdge>
+#ifdef CGTL_DO_NOT_USE_STL
       class _GraphTSGraph : public cgt::base::list<_GraphTSNode<_TpVertex, _TpEdge> >
+#else
+      class _GraphTSGraph : public std::list<_GraphTSNode<_TpVertex, _TpEdge> >
+#endif
       {
         private:
           typedef _GraphTSNode<_TpVertex, _TpEdge>  _TSNode;
 
         private:
+#ifdef CGTL_DO_NOT_USE_STL
           typedef cgt::base::list<_TSNode>  _Base;
+#else
+          typedef std::list<_TSNode>  _Base;
+#endif
 
         private:
           typedef typename _Base::iterator  _Iterator;

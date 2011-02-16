@@ -41,17 +41,6 @@
 #else
 #include <list>
 
-/*
-template<typename _TpItem, typename _Predicate, typename _Parm>
-std::list<_TpItem>::iterator find_if (std::list<_TpItem>::iterator _it, std::list<_TpItem>::iterator _end, _Predicate _pred, const _Parm& _parm)
-{
-	while (_it != _end && ! _pred (*_it, _parm))
-		++_it;
-
-	return _it;
-}
-*/
-
 template<typename _TpIter, typename _Predicate, typename _Parm>
 _TpIter find_if (_TpIter _it, _TpIter _end, _Predicate _pred, const _Parm& _parm)
 {

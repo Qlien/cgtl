@@ -273,6 +273,203 @@ namespace cgt
     {
       return (! _is_directed ());
     }
+
+
+  /*
+   * A simple graph, with no type for edges
+   */
+
+
+  template<typename _TpVertex, typename _TpGraphType>
+#ifdef CGTL_DO_NOT_USE_STL
+    class _GraphAdjMatrix<_TpVertex, void, _TpGraphType> : protected cgt::base::list<_GraphNode<_TpVertex, void> >
+#else
+    class _GraphAdjMatrix<_TpVertex, void, _TpGraphType> : protected std::list<_GraphNode<_TpVertex, void> >
+#endif
+  {
+    private:
+      typedef _GraphAdjMatrix<_TpVertex, void, _TpGraphType> _Self;
+
+    private:
+      typedef _GraphNode<_TpVertex, void>  _Node;
+      typedef _GraphEdge<_TpVertex, void>  _Edge;
+      typedef _GraphVertex<_TpVertex>         _Vertex;
+#ifdef CGTL_DO_NOT_USE_STL
+      typedef cgt::base::list<_Node>          _Base;
+      typedef cgt::base::list<_Edge>          _EdgeList;
+#else
+      typedef std::list<_Node>          _Base;
+      typedef std::list<_Edge>          _EdgeList;
+#endif
+
+	public:
+	  typedef typename _Base::iterator iterator;
+
+    protected:
+      /**
+       * A method to get a node pointer by its vertex.
+       * @param _vertex a reference to the vertex.
+       * @return A pointer to the node (NULL if the vertex is not found in graph).
+       */
+      _Node* _get_node (const _TpVertex &_vertex);
+
+      typename _Base::iterator _find (const _TpVertex &_vertex);
+
+	private:
+      void _insert_edge_if_not_exists (_Node* _n1, _Node* _n2);
+      void _insert_edge (_Node& _n1, _Node& _n2, _Vertex& _v1, _Vertex& _v2, _Edge& _e);
+
+    protected:
+#ifdef CGTL_DO_NOT_USE_STL
+      iterator _insert_node (const _TpVertex &_vertex) { return insert (_Node (_vertex)); }
+#else
+      iterator _insert_node (const _TpVertex &_vertex) { return insert (_Base::end (), _Node (_vertex)); }
+#endif
+      iterator _insert_vertex (const _TpVertex &_vertex)
+	  {
+		  iterator it = _find (_vertex);
+
+		  if (it == _Base::end ())
+			  it = _insert_node (_vertex);
+
+		  return it;
+	  }
+
+      void _insert_edge (const _TpVertex &_v1, const _TpVertex &_v2);
+      void _insert_edge (iterator& _it_v1, iterator& _it_v2);
+
+    protected:
+      void _invert ();
+
+    protected:
+      const bool _is_directed () const;
+      const bool _is_undirected () const;
+
+    private:
+      _TpGraphType  _type; /** < the graph type: directed or undirected */
+
+    protected:
+      /*
+       * We need a list of edges for two reasons:
+       *  - first, that's an easy way to create the edge_iterator,
+       *    since we only need to export a list iterator to users;
+       *  - second, we use a reference to these edges in the 
+       *    adjacency matrix. This way we can create only one
+       *    edge and use it twice in undirected graphs.
+       */
+
+      _EdgeList _edgeList;
+  };
+
+
+  template<typename _TpVertex, typename _TpGraphType>
+    _GraphNode<_TpVertex, void>* _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_get_node (const _TpVertex &_vertex)
+    {
+      _Node *_ptr_node = NULL;
+
+      typename _Base::iterator it;
+      typename _Base::iterator itEnd = _Base::end ();
+
+      for (it = _Base::begin (); it != itEnd; ++it)
+      {
+        if (it->vertex () == _vertex)
+        {
+          _ptr_node = &(*it);
+          break;
+        }
+      }
+
+      return _ptr_node;
+    }
+
+  template<typename _TpVertex, typename _TpGraphType>
+#ifdef CGTL_DO_NOT_USE_STL
+    typename cgt::base::list<_GraphNode<_TpVertex, void> >::iterator _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_find (const _TpVertex &_vertex)
+#else
+    typename std::list<_GraphNode<_TpVertex, void> >::iterator _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_find (const _TpVertex &_vertex)
+#endif
+    {
+      typename _Base::iterator it    = _Base::begin ();
+      typename _Base::iterator itEnd = _Base::end ();
+
+      while (it != itEnd && it->vertex () != _vertex)
+        ++it;
+     
+      return it;
+    }
+
+  template<typename _TpVertex, typename _TpGraphType>
+    void _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_insert_edge (const _TpVertex &_v1, const _TpVertex &_v2)
+    {
+      _Node *_ptr_n1 = _get_node (_v1);
+
+      if (_ptr_n1)
+      {
+        _Node *_ptr_n2 = _get_node (_v2);
+
+        if (_ptr_n2)
+			_insert_edge_if_not_exists (_ptr_n1, _ptr_n2);
+      }
+    }
+
+  template<typename _TpVertex, typename _TpGraphType>
+    void _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_insert_edge (iterator& _it_v1, iterator& _it_v2)
+	{
+	  _insert_edge_if_not_exists (&(*_it_v1), &(*_it_v2));
+	}
+
+  template<typename _TpVertex, typename _TpGraphType>
+    void _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_insert_edge_if_not_exists (_Node* _ptr_n1, _Node* _ptr_n2)
+	{
+		_Vertex& _vertex2 = _ptr_n2->vertex ();
+
+		if (! _ptr_n1->get_edge (_vertex2))
+		{
+			_Vertex& _vertex1 = _ptr_n1->vertex ();
+#ifdef CGTL_DO_NOT_USE_STL
+			_Edge &_edge = _edgeList.insert (_Edge (_vertex1, _vertex2));
+#else
+			_Edge &_edge = *(_edgeList.insert (_edgeList.end (), _Edge (_vertex1, _vertex2)));
+#endif
+			_insert_edge (*_ptr_n1, *_ptr_n2, _vertex1, _vertex2, _edge);
+		}
+	}
+
+  template<typename _TpVertex, typename _TpGraphType>
+    void _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_insert_edge (_Node& _n1, _Node& _n2, _Vertex& _v1, _Vertex& _v2, _Edge& _e)
+    {
+      _n1._insert (_e, _n2);
+
+      if (! _type._directed && ! _n2.get_edge (_v1))
+        _n2._insert (_e, _n1);
+    }
+
+  template<typename _TpVertex, typename _TpGraphType>
+    void _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_invert ()
+    {
+      /*
+       * for each node, call _invert_edges ()
+       */
+
+      typename _Base::iterator _itEnd = _Base::end ();
+      for (typename _Base::iterator _it = _Base::begin (); _it != _itEnd; ++_it)
+        _it->_invert_edges ();
+    }
+
+  template<typename _TpVertex, typename _TpGraphType>
+    const bool _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_is_directed () const
+    {
+      return _type._directed;
+    }
+
+  template<typename _TpVertex, typename _TpGraphType>
+    const bool _GraphAdjMatrix<_TpVertex, void, _TpGraphType>::_is_undirected () const
+    {
+      return (! _is_directed ());
+    }
+
+
+
 }
 
 #endif

@@ -113,6 +113,63 @@ namespace cgt
 
 		return *this;
 	}
+
+
+  /*
+   * A simple graph, with no type for edges
+   */
+
+
+  template<typename _TpVertex>
+    class _GraphAdjacency<_TpVertex, void>
+    {
+		private:
+			typedef _GraphAdjacency<_TpVertex, void> _Self;
+
+      private:
+        typedef _GraphNode<_TpVertex, void>      _Node;
+        typedef _GraphEdge<_TpVertex, void>      _Edge;
+        typedef _GraphVertex<_TpVertex>             _Vertex;
+        typedef _GraphAdjacency<_TpVertex, void> _Adjacency;
+
+      public:
+        _GraphAdjacency (_Edge& _e, _Node& _n) : _edge (_e), _node (_n)  { }
+
+		_Self& operator=(const _Self& _s);
+
+      public:
+        inline const bool operator==(const _Adjacency& _adj) const
+        {
+          return (_edge == _adj.edge () && _node.vertex () == _adj.node ().vertex ());
+        }
+
+        inline const bool operator!=(const _Adjacency& _adj) const
+        {
+          return ! (*this == _adj);
+        }
+
+      public:
+        inline _Edge&  edge () const { return _edge; }
+        inline _Node& node () const { return _node; }
+        inline const _Vertex& vertex () const { return _node.vertex (); }
+        //inline const _TpEdge& value () const { return _edge.value (); }
+
+      private:
+        // Reference to the edge object (stored in _GraphAdjMatrix._edgeList)
+        _Edge&   _edge;
+
+        // Reference to the node at the right
+        _Node& _node;
+    };
+
+  template<typename _TpVertex>
+    _GraphAdjacency<_TpVertex, void>& _GraphAdjacency<_TpVertex, void>::operator=(const _GraphAdjacency<_TpVertex, void>& _s)
+	{
+		_edge = _s._edge;
+		_node = _s._node;
+
+		return *this;
+	}
 }
 
 #endif // __CGTL__CGT_GRAPH_ADJACENCY_H_

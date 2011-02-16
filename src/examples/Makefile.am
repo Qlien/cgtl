@@ -1,4 +1,5 @@
 
+SIMPLE_GRAPH_SRCS		= simple_graph.cpp
 EX1_SRCS		= example1.cpp
 EX2_SRCS		= example2.cpp
 EX3_SRCS		= example3.cpp
@@ -17,7 +18,8 @@ COMPLEXGRAPH_SRCS = complexgraph.cpp
 TOPOSORTTESTER_SRCS = toposorttester.cpp
 MAP_TILES_GRAPH_SRCS = maptilesgraph.cpp
 
-bin_PROGRAMS		= example1 example2 example3 example4 example5 depthtester_d depthtester_u breadthtester_d breadthtester_u dijkstratester_d primtester_u kruskaltester_u scctester_d dijkstratester_u complexgraph toposorttester maptilesgraph
+bin_PROGRAMS		= simple_graph example1 example2 example3 example4 example5 depthtester_d depthtester_u breadthtester_d breadthtester_u dijkstratester_d primtester_u kruskaltester_u scctester_d dijkstratester_u complexgraph toposorttester maptilesgraph
+simple_graph_SOURCES	= $(SIMPLE_GRAPH_SRCS)
 example1_SOURCES	= $(EX1_SRCS)
 example2_SOURCES	= $(EX2_SRCS)
 example3_SOURCES	= $(EX3_SRCS)

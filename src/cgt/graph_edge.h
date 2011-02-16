@@ -60,7 +60,7 @@ namespace cgt
    * \endcode
    */
 
-  template<typename _TpVertex, typename _TpEdge>
+  template<typename _TpVertex, typename _TpEdge = void>
     class _GraphEdge
     {
       private:
@@ -71,7 +71,14 @@ namespace cgt
         _GraphEdge (const _TpEdge& _e, _Vertex& _v1, _Vertex& _v2) : _value (_e), _vertex1 (_v1), _vertex2 (_v2) { }
 
 	  public:
-		_GraphEdge& operator=(const _GraphEdge& _e);
+		_GraphEdge& operator=(const _GraphEdge& _o)
+		{
+			_value = _o._value;
+			_vertex1 = _o._vertex1;
+			_vertex2 = _o._vertex2;
+
+			return *this;
+		}
 
       public:
         inline const bool operator==(const _Edge& _edge) const
@@ -95,15 +102,56 @@ namespace cgt
         _Vertex&  _vertex2;
     };
 
-  template<typename _TpVertex, typename _TpEdge>
-    _GraphEdge<_TpVertex, _TpEdge>& _GraphEdge<_TpVertex, _TpEdge>::operator=(const _GraphEdge<_TpVertex, _TpEdge>& _s)
-	{
-		_value = _s._value;
-		_vertex1 = _s._vertex1;
-		_vertex2 = _s._vertex2;
 
-		return *this;
-	}
+  /*
+	template<typename _TpVertex>
+		class _GraphEdge<_TpVertex, void>
+		{
+		};
+		*/
+  /*
+	template<typename _TpVertex>
+		_GraphEdge<_TpVertex, void>::_GraphEdge(_GraphVertex<_TpVertex>& _v1, _GraphVertex<_TpVertex>& _v2) : _vertex1 (_v1), _vertex2 (_v2) { }
+		*/
+
+	template<typename _TpVertex>
+		class _GraphEdge<_TpVertex, void>
+		{
+			private:
+				typedef _GraphVertex<_TpVertex> _Vertex;
+				typedef _GraphEdge<_TpVertex, void> _Edge;
+
+			public:
+				_GraphEdge (_Vertex& _v1, _Vertex& _v2) : _vertex1 (_v1), _vertex2 (_v2) { }
+
+			public:
+				_GraphEdge& operator=(const _GraphEdge& _other)
+				{
+					_vertex1 = _other._vertex1;
+					_vertex2 = _other._vertex2;
+
+					return *this;
+				}
+
+			public:
+				inline const bool operator==(const _Edge& _other) const
+				{
+					return (_vertex1 == _other.v1 () && _vertex2 == _other.v2 ());
+				}
+
+				inline const bool operator!=(const _Edge& _other) const
+				{
+					return !operator==(_other);
+				}
+
+			public:
+				inline _Vertex& v1 () const { return _vertex1; }
+				inline _Vertex& v2 () const { return _vertex2; }
+
+			private:
+				_Vertex&  _vertex1;
+				_Vertex&  _vertex2;
+		};
 }
 
 #endif // __CGTL__CGT_GRAPH_EDGE_H_

@@ -36,140 +36,119 @@
 
 namespace cgt
 {
-  template<typename _TpVertex, typename _TpEdge>
-    class _GraphNode; /** < \b We can't include \b graph_adjacency.h since \b _GraphAdjacency has a reference to \b _GraphNode, and \b _GraphNode has a list of adjacencies. */
+	template<typename _TpVertex, typename _TpEdge>
+		class _GraphNode; /** < \b We can't include \b graph_adjacency.h since \b _GraphAdjacency has a reference to \b _GraphNode, and \b _GraphNode has a list of adjacencies. */
 
-  /*!
-   * \class _GraphAdjacency
-   * \brief It belongs to a node and contains references to an edge and the other node linked by the edge.
-   * \author Leandro Costa
-   * \date 2009
-   *
-   * A \b _GraphAdjacency is a structure that belongs to a node (stored in its
-   * adjacency list) and contains a reference to an edge and a reference to the
-   * other node of the relationship. So, from an adjacency it is possible to visit
-   * all vertices reachable from the vertex to which the adjacency belongs.
-   *
-   * The structure is composed by two references, so we need 8 bytes to represent
-   * it in our graph.
-   *
-   * \code
-   *  ________________________
-   * | _GraphAdjacency's size |
-   * |________________________|
-   * |           8            |
-   * |________________________|
-   *
-   * \endcode
-   */
 
-  template<typename _TpVertex, typename _TpEdge>
-    class _GraphAdjacency
-    {
-		private:
-			typedef _GraphAdjacency<_TpVertex, _TpEdge> _Self;
+	template<typename _TpVertex, typename _TpEdge>
+		class _GraphAdjacencyBase
+		{
+			private:
+				typedef _GraphAdjacencyBase<_TpVertex, _TpEdge> _Self;
+				typedef _GraphVertex<_TpVertex>					_Vertex;
 
-      private:
-        typedef _GraphNode<_TpVertex, _TpEdge>      _Node;
-        typedef _GraphEdge<_TpVertex, _TpEdge>      _Edge;
-        typedef _GraphVertex<_TpVertex>             _Vertex;
-        typedef _GraphAdjacency<_TpVertex, _TpEdge> _Adjacency;
+			protected:
+				typedef _GraphNode<_TpVertex, _TpEdge>	_Node;
+				typedef _GraphEdge<_TpVertex, _TpEdge>	_Edge;
 
-      public:
-        _GraphAdjacency (_Edge& _e, _Node& _n) : _edge (_e), _node (_n)  { }
+			public:
+				_GraphAdjacencyBase (_Edge& _e, _Node& _n) : _edge (_e), _node (_n)  { }
 
-		_Self& operator=(const _Self& _s);
+			public:
+				_Self& operator=(const _Self& _s);
 
-      public:
-        inline const bool operator==(const _Adjacency& _adj) const
-        {
-          return (_edge == _adj.edge () && _node.vertex () == _adj.node ().vertex ());
-        }
+				inline const bool operator==(const _Self& _other) const
+				{
+					return (_edge == _other.edge () && _node.vertex () == _other.node ().vertex ());
+				}
 
-        inline const bool operator!=(const _Adjacency& _adj) const
-        {
-          return ! (*this == _adj);
-        }
+				inline const bool operator!=(const _Self& _other) const
+				{
+					return ! (*this == _other);
+				}
 
-      public:
-        inline _Edge&  edge () const { return _edge; }
-        inline _Node& node () const { return _node; }
-        inline const _Vertex& vertex () const { return _node.vertex (); }
-        inline const _TpEdge& value () const { return _edge.value (); }
+				inline _Edge&  edge () const { return _edge; }
+				inline _Node& node () const { return _node; }
+				inline const _Vertex& vertex () const { return _node.vertex (); }
 
-      private:
-        // Reference to the edge object (stored in _GraphAdjMatrix._edgeList)
-        _Edge&   _edge;
+			protected:
+				// Reference to the edge object (stored in _GraphAdjMatrix._edgeList)
+				_Edge& _edge;
 
-        // Reference to the node at the right
-        _Node& _node;
-    };
+			private:
+				// Reference to the node at the right
+				_Node& _node;
+		};
 
-  template<typename _TpVertex, typename _TpEdge>
-    _GraphAdjacency<_TpVertex, _TpEdge>& _GraphAdjacency<_TpVertex, _TpEdge>::operator=(const _GraphAdjacency<_TpVertex, _TpEdge>& _s)
+	template<typename _TpVertex, typename _TpEdge>
+		_GraphAdjacencyBase<_TpVertex, _TpEdge>& _GraphAdjacencyBase<_TpVertex, _TpEdge>::operator=(const _GraphAdjacencyBase<_TpVertex, _TpEdge>& _other)
+		{
+			_edge = _other._edge;
+			_node = _other._node;
+
+			return *this;
+		}
+
+
+	/*!
+	 * \class _GraphAdjacency
+	 * \brief It belongs to a node and contains references to an edge and the other node linked by the edge.
+	 * \author Leandro Costa
+	 * \date 2009
+	 *
+	 * A \b _GraphAdjacency is a structure that belongs to a node (stored in its
+	 * adjacency list) and contains a reference to an edge and a reference to the
+	 * other node of the relationship. So, from an adjacency it is possible to visit
+	 * all vertices reachable from the vertex to which the adjacency belongs.
+	 *
+	 * The structure is composed by two references, so we need 8 bytes to represent
+	 * it in our graph.
+	 *
+	 * \code
+	 *  ________________________
+	 * | _GraphAdjacency's size |
+	 * |________________________|
+	 * |           8            |
+	 * |________________________|
+	 *
+	 * \endcode
+	 */
+
+	template<typename _TpVertex, typename _TpEdge>
+		class _GraphAdjacency : public _GraphAdjacencyBase<_TpVertex, _TpEdge>
 	{
-		_edge = _s._edge;
-		_node = _s._node;
+		private:
+			typedef _GraphAdjacencyBase<_TpVertex, _TpEdge> _Base;
 
-		return *this;
-	}
+		private:
+			typedef typename _Base::_Node	_Node;
+			typedef typename _Base::_Edge	_Edge;
+
+		public:
+			_GraphAdjacency (_Edge& _e, _Node& _n) : _Base (_e, _n) { }
+
+		public:
+			inline const _TpEdge& value () const { return _Base::_edge.value (); }
+	};
 
 
   /*
    * A simple graph, with no type for edges
    */
 
-
   template<typename _TpVertex>
-    class _GraphAdjacency<_TpVertex, void>
+    class _GraphAdjacency<_TpVertex, void> : public _GraphAdjacencyBase<_TpVertex, void>
     {
 		private:
-			typedef _GraphAdjacency<_TpVertex, void> _Self;
+			typedef _GraphAdjacencyBase<_TpVertex, void> _Base;
 
-      private:
-        typedef _GraphNode<_TpVertex, void>      _Node;
-        typedef _GraphEdge<_TpVertex, void>      _Edge;
-        typedef _GraphVertex<_TpVertex>             _Vertex;
-        typedef _GraphAdjacency<_TpVertex, void> _Adjacency;
+		private:
+			typedef typename _Base::_Node	_Node;
+			typedef typename _Base::_Edge	_Edge;
 
-      public:
-        _GraphAdjacency (_Edge& _e, _Node& _n) : _edge (_e), _node (_n)  { }
-
-		_Self& operator=(const _Self& _s);
-
-      public:
-        inline const bool operator==(const _Adjacency& _adj) const
-        {
-          return (_edge == _adj.edge () && _node.vertex () == _adj.node ().vertex ());
-        }
-
-        inline const bool operator!=(const _Adjacency& _adj) const
-        {
-          return ! (*this == _adj);
-        }
-
-      public:
-        inline _Edge&  edge () const { return _edge; }
-        inline _Node& node () const { return _node; }
-        inline const _Vertex& vertex () const { return _node.vertex (); }
-        //inline const _TpEdge& value () const { return _edge.value (); }
-
-      private:
-        // Reference to the edge object (stored in _GraphAdjMatrix._edgeList)
-        _Edge&   _edge;
-
-        // Reference to the node at the right
-        _Node& _node;
-    };
-
-  template<typename _TpVertex>
-    _GraphAdjacency<_TpVertex, void>& _GraphAdjacency<_TpVertex, void>::operator=(const _GraphAdjacency<_TpVertex, void>& _s)
-	{
-		_edge = _s._edge;
-		_node = _s._node;
-
-		return *this;
-	}
+		public:
+			_GraphAdjacency (_Edge& _e, _Node& _n) : _Base (_e, _n) { }
+	};
 }
 
 #endif // __CGTL__CGT_GRAPH_ADJACENCY_H_

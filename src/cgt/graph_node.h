@@ -47,7 +47,7 @@ namespace cgt
   }
 
   template<typename _TpVertex, typename _TpEdge, typename _TpGraphType>
-    class _GraphAdjMatrix;
+    class _GraphAdjMatrixBase;
 
   /*!
    * \class _GraphNode
@@ -71,8 +71,8 @@ namespace cgt
     class _GraphNode
     {
       private:
-        friend class _GraphAdjMatrix<_TpVertex, _TpEdge, cgt::_Directed>;
-        friend class _GraphAdjMatrix<_TpVertex, _TpEdge, cgt::_Undirected>;
+        friend class _GraphAdjMatrixBase<_TpVertex, _TpEdge, cgt::_Directed>;
+        friend class _GraphAdjMatrixBase<_TpVertex, _TpEdge, cgt::_Undirected>;
 
         friend  class cgt::stconncomp::_SCCIterator<_TpVertex, _TpEdge, cgt::base::iterator::_TpCommon>;
         friend  class cgt::stconncomp::_SCCIterator<_TpVertex, _TpEdge, cgt::base::iterator::_TpConst>;

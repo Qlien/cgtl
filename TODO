@@ -1,5 +1,4 @@
-* Implement topological sort;
-	- OK.
+* Throw exception from dijkstra when there are edges with negative weight;
 
 * Implement bellmanford (single-source shortest path);
 
@@ -19,6 +18,9 @@
 * What should I do when the user tries to insert duplicated vertices or edges? What would STL do?
 
 ---
+
+* Implement topological sort;
+	- OK.
 
 * Implement structure to be accessed by strongly connected components iterators;
   - OK.

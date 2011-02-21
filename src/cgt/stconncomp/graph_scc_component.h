@@ -100,12 +100,8 @@ namespace cgt
          */
 
         _Edge* _ptr_edge = NULL;
-#ifdef CGTL_DO_NOT_USE_STL
-        _SCCNode* _ptr_node = _Base::back ();
-#else
-        _SCCNode* _ptr_node = &(_Base::back ());
-#endif
-        _Node& _n1 = _ptr_node->node ();
+        _SCCNode& _node = _Base::back ();
+        _Node& _n1 = _node.node ();
 
         _Iterator _itEnd = _Base::end ();
 
@@ -114,7 +110,7 @@ namespace cgt
           _Node& _n2 = _it->node ();
 
           if ((_ptr_edge = _n1.get_edge (_n2.vertex ())))
-            _ptr_node->_insert (*_ptr_edge, _n2);
+            _node._insert (*_ptr_edge, _n2);
 
           if ((_ptr_edge = _n2.get_edge (_n1.vertex ())))
             _it->_insert (*_ptr_edge, _n1);

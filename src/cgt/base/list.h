@@ -105,7 +105,7 @@ namespace cgt
           _TpItem& _push_front (const _TpItem& _item);
           iterator _push_back (const _TpItem& _item);
           _TpItem* _pop (_Item* _ptr_item);
-          _TpItem* _get (_Item* _ptr_item) const;
+          _TpItem& _get (_Item* _ptr_item) const;
           _Item* _find (const _TpItem& _item) const;
           void _remove (_Item* _ptr);
           void _remove_all ();
@@ -218,14 +218,14 @@ namespace cgt
       }
 
     template<typename _TpItem, typename _Alloc>
-      _TpItem* _List<_TpItem, _Alloc>::_get (_Item* _ptr_item) const
+      _TpItem& _List<_TpItem, _Alloc>::_get (_Item* _ptr_item) const
       {
         _TpItem* _ptr = NULL;
 
         if (_ptr_item)
           _ptr = &(_ptr_item->_data);
 
-        return _ptr;
+        return *_ptr;
       }
 
     template<typename _TpItem, typename _Alloc>
@@ -396,10 +396,14 @@ namespace cgt
         inline typename _Base::iterator push_back (const _TpItem& _item) { return _Base::_push_back (_item); }
         inline _TpItem* pop_front () { return _pop (_Base::_head); }
         inline _TpItem* pop_back () {return _pop (_Base::_tail); }
-        inline _TpItem* front () { return _get (_Base::_head); }
-        inline const _TpItem* const front () const { return _get (_Base::_head); }
-        inline _TpItem* back () {return _get (_Base::_tail); }
-        inline const _TpItem* const back () const { return _get (_Base::_tail); }
+        //inline _TpItem* front () { return _get (_Base::_head); }
+        inline _TpItem& front () { return _get (_Base::_head); }
+        //inline const _TpItem* const front () const { return _get (_Base::_head); }
+        inline _TpItem& front () const { return _get (_Base::_head); }
+        //inline _TpItem* back () {return _get (_Base::_tail); }
+        inline _TpItem& back () {return _get (_Base::_tail); }
+        //inline const _TpItem* const back () const { return _get (_Base::_tail); }
+        inline _TpItem& back () const { return _get (_Base::_tail); }
         inline void remove (const _TpItem& _item) { _Base::_remove (_Base::_find (_item)); }
         inline void clear () { _Base::_remove_all (); }
         inline const size_t size () const { return _Base::_size; }

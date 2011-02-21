@@ -80,7 +80,7 @@ namespace cgt
         void insert (const _TpItem &_item) { _Base::push_front (_item); }
         void push (const _TpItem &_item) { _Base::push_front (_item); }
         _TpItem* pop () { return _Base::_pop (_Base::_head); }
-        _TpItem* top () { return _Base::_get (_Base::_head); }
+        _TpItem& top () { return _Base::_get (_Base::_head); }
 #else
       private:
         typedef std::list<_TpItem>  _Base;
@@ -90,7 +90,7 @@ namespace cgt
         void push (const _TpItem &_item) { _Base::push_front (_item); }
         //_TpItem* pop () { _TpItem* p = &(_Base::front ()); _Base::pop_front (); return p; }
         _TpItem* pop () { _TpItem* p = new _TpItem (_Base::front ()); _Base::pop_front (); return p; }
-        _TpItem* top () { return &(_Base::front ()); }
+        _TpItem& top () { return _Base::front (); }
 #endif
     };
   }

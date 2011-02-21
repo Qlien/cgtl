@@ -80,7 +80,7 @@ namespace cgt
         void insert (const _TpItem &_item) { _Base::_push_back (_item); }
         void enqueue (const _TpItem &_item) { _Base::_push_back (_item); }
         _TpItem* dequeue () { return _Base::_pop (_Base::_head); }
-        _TpItem* first () { return _Base::_get (_Base::_head); }
+        _TpItem& first () { return _Base::_get (_Base::_head); }
 #else
       private:
         typedef std::list<_TpItem> _Base;
@@ -90,7 +90,7 @@ namespace cgt
         void enqueue (const _TpItem &_item) { _Base::push_back (_item); }
         //_TpItem* dequeue () { _TpItem* p = &(_Base::front ()); _Base::pop_front (); return p; }
         _TpItem* dequeue () { _TpItem* p = new _TpItem (_Base::front ()); _Base::pop_front (); return p; }
-        _TpItem* first () { return &(_Base::front ()); }
+        _TpItem& first () { return _Base::front (); }
 #endif
     };
   }

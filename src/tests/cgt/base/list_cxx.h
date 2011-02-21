@@ -58,8 +58,8 @@ class list_cxx : public CxxTest::TestSuite
       l.push_back (1);
       TS_ASSERT_EQUALS (l.size (), static_cast<size_t>(1));
       TS_ASSERT_EQUALS (l.empty (), false);
-      TS_ASSERT_EQUALS (*(l.front ()), 1);
-      TS_ASSERT_EQUALS (*(l.back ()), 1);
+      TS_ASSERT_EQUALS (l.front (), 1);
+      TS_ASSERT_EQUALS (l.back (), 1);
     }
 
     void test_find ()
@@ -99,8 +99,8 @@ class list_cxx : public CxxTest::TestSuite
       TS_ASSERT_EQUALS (l.size (), static_cast<size_t>(3));
       l.remove (2);
       TS_ASSERT_EQUALS (l.size (), static_cast<size_t>(2));
-      TS_ASSERT_EQUALS (*(l.front ()), 1);
-      TS_ASSERT_EQUALS (*(l.back ()), 3);
+      TS_ASSERT_EQUALS (l.front (), 1);
+      TS_ASSERT_EQUALS (l.back (), 3);
     }
 
     void test_pop_back ()
@@ -112,8 +112,8 @@ class list_cxx : public CxxTest::TestSuite
       TS_ASSERT_EQUALS (l.size (), static_cast<size_t>(3));
       int* p = l.pop_back ();
       TS_ASSERT_EQUALS (l.size (), static_cast<size_t>(2));
-      TS_ASSERT_EQUALS (*(l.front ()), 1);
-      TS_ASSERT_EQUALS (*(l.back ()), 2);
+      TS_ASSERT_EQUALS (l.front (), 1);
+      TS_ASSERT_EQUALS (l.back (), 2);
       delete p;
     }
 
@@ -126,8 +126,8 @@ class list_cxx : public CxxTest::TestSuite
       TS_ASSERT_EQUALS (l.size (), static_cast<size_t>(3));
       int* p = l.pop_front ();
       TS_ASSERT_EQUALS (l.size (), static_cast<size_t>(2));
-      TS_ASSERT_EQUALS (*(l.front ()), 2);
-      TS_ASSERT_EQUALS (*(l.back ()), 3);
+      TS_ASSERT_EQUALS (l.front (), 2);
+      TS_ASSERT_EQUALS (l.back (), 3);
       delete p;
     }
 

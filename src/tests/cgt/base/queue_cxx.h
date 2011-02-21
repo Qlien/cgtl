@@ -58,7 +58,7 @@ class queue_cxx : public CxxTest::TestSuite
       q.insert (1);
       TS_ASSERT_EQUALS (q.size (), static_cast<size_t>(1));
       TS_ASSERT_EQUALS (q.empty (), false);
-      TS_ASSERT_EQUALS (*(q.first ()), 1);
+      TS_ASSERT_EQUALS (q.first (), 1);
     }
 
 //    void test_find ()
@@ -86,10 +86,10 @@ class queue_cxx : public CxxTest::TestSuite
       q.insert (2);
       q.insert (3);
       TS_ASSERT_EQUALS (q.size (), static_cast<size_t>(3));
-      TS_ASSERT_EQUALS (*(q.first ()), 1);
+      TS_ASSERT_EQUALS (q.first (), 1);
       int* p = q.dequeue ();
       TS_ASSERT_EQUALS (q.size (), static_cast<size_t>(2));
-      TS_ASSERT_EQUALS (*(q.first ()), 2);
+      TS_ASSERT_EQUALS (q.first (), 2);
       delete p;
     }
 

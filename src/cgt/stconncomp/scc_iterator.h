@@ -186,11 +186,7 @@ namespace cgt
            */
 
           if (_s._ptr_component)
-#ifdef CGTL_DO_NOT_USE_STL
-            _ptr_component  = _component_list.back ();
-#else
             _ptr_component  = &(_component_list.back ());
-#endif
 
           return *this;
         }
@@ -386,11 +382,7 @@ namespace cgt
         _component_list.push_back (_Component (_SCCNode (_node)));
 
         // Add _node to the new SCC
-#ifdef CGTL_DO_NOT_USE_STL
-        _ptr_component = _component_list.back ();
-#else
         _ptr_component = &(_component_list.back ());
-#endif
 
         /*
          * Execute DFS until _node is poped from the stack.
@@ -401,20 +393,20 @@ namespace cgt
 
         while (! _dfs_state_stack.empty ())
         {
-          _DFSState *_ptr_state  = _dfs_state_stack.top ();
+          _DFSState& _state  = _dfs_state_stack.top ();
 
-          while (! _ptr_state->adj_finished ())
+          while (! _state.adj_finished ())
           {
-            if (_has_color (_ptr_state->_adj_node (), _DFSInfo::WHITE))
+            if (_has_color (_state._adj_node (), _DFSInfo::WHITE))
             {
-              _ptr_node = &(_ptr_state->_adj_node ());
-              _ptr_state->adj_incr ();
+              _ptr_node = &(_state._adj_node ());
+              _state.adj_incr ();
               _dfs_state_stack.push (_DFSState (*_ptr_node));
               _discover_node (*_ptr_node);
               break;
             }
             else
-              _ptr_state->adj_incr ();
+              _state.adj_incr ();
           }
 
           if (_ptr_node)

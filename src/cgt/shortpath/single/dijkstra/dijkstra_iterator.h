@@ -169,11 +169,7 @@ namespace cgt
             _AdjListIterator itAEnd = adjList.end ();
 
             for (itA = adjList.begin (); itA != itAEnd; ++itA)
-#ifdef CGTL_DO_NOT_USE_STL
-              _notVisitedInfoHeap.relax (&(itA->node ()), _TpEdge (), itA->edge (), &(_infoList.back ()->node ()));
-#else
               _notVisitedInfoHeap.relax (&(itA->node ()), _TpEdge (), itA->edge (), &(_infoList.back ().node ()));
-#endif
           }
 
         template<typename _TpVertex, typename _TpEdge, template<typename> class _TpIterator>
@@ -230,11 +226,7 @@ namespace cgt
               _AdjListIterator itAEnd = adjList.end ();
 
               for (itA = adjList.begin (); itA != itAEnd; ++itA)
-#ifdef CGTL_DO_NOT_USE_STL
-                _notVisitedInfoHeap.relax (&(itA->node ()), _ptr->distance (), itA->edge(), &(_infoList.back ()->node ()));
-#else
                 _notVisitedInfoHeap.relax (&(itA->node ()), _ptr->distance (), itA->edge(), &(_infoList.back ().node ()));
-#endif
             }
 
             return *this;

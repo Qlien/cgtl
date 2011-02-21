@@ -58,7 +58,7 @@ class stack_cxx : public CxxTest::TestSuite
       s.insert (1);
       TS_ASSERT_EQUALS (s.size (), static_cast<size_t>(1));
       TS_ASSERT_EQUALS (s.empty (), false);
-      TS_ASSERT_EQUALS (*(s.top ()), 1);
+      TS_ASSERT_EQUALS (s.top (), 1);
     }
 
 //    void test_find ()
@@ -86,10 +86,10 @@ class stack_cxx : public CxxTest::TestSuite
       s.insert (2);
       s.insert (3);
       TS_ASSERT_EQUALS (s.size (), static_cast<size_t>(3));
-      TS_ASSERT_EQUALS (*(s.top ()), 3);
+      TS_ASSERT_EQUALS (s.top (), 3);
       int* p = s.pop ();
       TS_ASSERT_EQUALS (s.size (), static_cast<size_t>(2));
-      TS_ASSERT_EQUALS (*(s.top ()), 2);
+      TS_ASSERT_EQUALS (s.top (), 2);
       delete p;
     }
 

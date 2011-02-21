@@ -36,7 +36,8 @@ DIR_CXXTEST_INC_DEFAULT='/usr/local/cxxtest-3.10.1/cxxtest'
 CXXTFLAGS='--error-printer'
 
 # C e C++ compilers flags:
-CPPFLAGS='-g -Wall -Werror -O'
+#CPPFLAGS='-g -Wall -Werror -O'
+CPPFLAGS='-g -Wall -Werror -O -DCGTL_DO_NOT_USE_STL'
 CFLAGS=
 CXXFLAGS=
 

@@ -138,11 +138,7 @@ namespace cgt
   template<typename _TpVertex, typename _TpEdge>
     void _GraphAdjList<_TpVertex, _TpEdge>::_insert (_Edge& _e, _Node& _n)
     {
-#ifdef CGTL_DO_NOT_USE_STL
-      _Base::insert (_Adjacency (_e, _n));
-#else
-      _Base::insert (_Base::end (), _Adjacency (_e, _n));
-#endif
+      _Base::push_back (_Adjacency (_e, _n));
     }
 
   template<typename _TpVertex, typename _TpEdge>

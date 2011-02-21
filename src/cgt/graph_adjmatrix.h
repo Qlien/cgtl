@@ -85,11 +85,7 @@ namespace cgt
 			iterator _find (const _TpVertex &_vertex);
 
 		protected:
-#ifdef CGTL_DO_NOT_USE_STL
-			iterator _insert_node (const _TpVertex &_vertex) { return insert (_Node (_vertex)); }
-#else
-			iterator _insert_node (const _TpVertex &_vertex) { return insert (_Base::end (), _Node (_vertex)); }
-#endif
+			iterator _insert_node (const _TpVertex &_vertex) { return push_back (_Node (_vertex)); }
 
 			iterator _insert_vertex (const _TpVertex &_vertex)
 			{
@@ -287,11 +283,7 @@ namespace cgt
 			if (! _ptr_n1->get_edge (_vertex2))
 			{
 				_Vertex& _vertex1 = _ptr_n1->vertex ();
-#ifdef CGTL_DO_NOT_USE_STL
-				_Edge &_edge = _Base::_edgeList.insert (_Edge (_e, _vertex1, _vertex2));
-#else
-				_Edge &_edge = *(_Base::_edgeList.insert (_Base::_edgeList.end (), _Edge (_e, _vertex1, _vertex2)));
-#endif
+				_Edge &_edge = *(_Base::_edgeList.push_back (_Edge (_e, _vertex1, _vertex2)));
 				_Base::_insert_edge (*_ptr_n1, *_ptr_n2, _vertex1, _vertex2, _edge);
 			}
 		}
@@ -352,11 +344,7 @@ namespace cgt
 			if (! _ptr_n1->get_edge (_vertex2))
 			{
 				_Vertex& _vertex1 = _ptr_n1->vertex ();
-#ifdef CGTL_DO_NOT_USE_STL
-				_Edge &_edge = _Base::_edgeList.insert (_Edge (_vertex1, _vertex2));
-#else
-				_Edge &_edge = *(_Base::_edgeList.insert (_Base::_edgeList.end (), _Edge (_vertex1, _vertex2)));
-#endif
+				_Edge &_edge = *(_Base::_edgeList.push_back (_Edge (_vertex1, _vertex2)));
 				_Base::_insert_edge (*_ptr_n1, *_ptr_n2, _vertex1, _vertex2, _edge);
 			}
 		}

@@ -77,11 +77,7 @@ namespace cgt
           typedef _GraphEdge<_TpVertex, _TpEdge>    _Edge;
 
         public:
-#ifdef CGTL_DO_NOT_USE_STL
-          _GraphSCCComponent (const _SCCNode& _n) { _Base::insert (_n); }
-#else
-          _GraphSCCComponent (const _SCCNode& _n) { _Base::insert (_Base::end (), _n); }
-#endif
+          _GraphSCCComponent (const _SCCNode& _n) { _Base::push_back (_n); }
 
         public:
           void insert (const _SCCNode& _n);
@@ -91,11 +87,7 @@ namespace cgt
     template<typename _TpVertex, typename _TpEdge>
       void _GraphSCCComponent<_TpVertex, _TpEdge>::insert (const _SCCNode& _n)
       {
-#ifdef CGTL_DO_NOT_USE_STL
-        _Base::insert (_n);
-#else
-        _Base::insert (_Base::end (), _n);
-#endif
+        _Base::push_back (_n);
 
         /*!
          * We need to add adjacencies between nodes that are linked in the

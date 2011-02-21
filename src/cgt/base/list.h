@@ -390,7 +390,7 @@ namespace cgt
 
       public:
         //inline _TpItem& insert (const _TpItem& _item) { return _Base::_push_back (_item); }
-        inline typename _Base::iterator insert (const _TpItem& _item) { return _Base::_push_back (_item); }
+        //inline typename _Base::iterator insert (const _TpItem& _item) { return _Base::_push_back (_item); }
         inline _TpItem& push_front (const _TpItem& _item) { return _Base::_push_front (_item); }
         //inline _TpItem& push_back (const _TpItem& _item) { return _Base::_push_back (_item); }
         inline typename _Base::iterator push_back (const _TpItem& _item) { return _Base::_push_back (_item); }

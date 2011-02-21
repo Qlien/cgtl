@@ -172,19 +172,11 @@ namespace cgt
         {
           if (&(*_it) == _ptr_node)
           {
-#ifdef CGTL_DO_NOT_USE_STL
-            _infoList.insert (_Info (*_it, _Info::GRAY, ++_global_time));
-#else
-            _infoList.insert (_infoList.end (), _Info (*_it, _Info::GRAY, ++_global_time));
-#endif
+            _infoList.push_back (_Info (*_it, _Info::GRAY, ++_global_time));
             _stContainer.insert (_State (*_it));
           }
           else
-#ifdef CGTL_DO_NOT_USE_STL
-            _infoList.insert (_Info (*_it));
-#else
-            _infoList.insert (_infoList.end (), _Info (*_it));
-#endif
+            _infoList.push_back (_Info (*_it));
         }
       }
 

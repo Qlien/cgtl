@@ -159,11 +159,7 @@ namespace cgt
             for (_NodeIterator it = _it_node; it != _it_node_end; ++it)
             {
               if (&(*it) == _ptr_node)
-#ifdef CGTL_DO_NOT_USE_STL
-                _infoList.insert (_Info (*it));
-#else
-                _infoList.insert (_infoList.end (), _Info (*it));
-#endif
+                _infoList.push_back (_Info (*it));
               else
                 _notVisitedInfoHeap.push (_Info (*it));
             }
@@ -227,11 +223,7 @@ namespace cgt
               _Info* _ptr = _notVisitedInfoHeap.pop ();
 
               _ptr_node = &(_ptr->node ());
-#ifdef CGTL_DO_NOT_USE_STL
-              _infoList.insert (*_ptr);
-#else
-              _infoList.insert (_infoList.end (), *_ptr);
-#endif
+              _infoList.push_back (*_ptr);
 
               const _AdjList &adjList = _ptr_node->adjlist ();
               _AdjListIterator itA = adjList.begin ();

@@ -246,11 +246,7 @@ namespace cgt
 
         _SCC_DFSInfoHeapIterator _itEnd = _rdfs_heap.end ();
         for (_SCC_DFSInfoHeapIterator _it = _rdfs_heap.begin (); _it != _itEnd; ++_it)
-#ifdef CGTL_DO_NOT_USE_STL
-          _dfs_list.insert (_DFSInfo (_it->node ()));
-#else
-          _dfs_list.insert (_dfs_list.end (), _DFSInfo (_it->node ()));
-#endif
+          _dfs_list.push_back (_DFSInfo (_it->node ()));
 
         /*
          * Get the node with greater finish time
@@ -387,11 +383,7 @@ namespace cgt
         _discover_node (_node);
 
          // Add _node to the SCC
-#ifdef CGTL_DO_NOT_USE_STL
-        _component_list.insert (_Component (_SCCNode (_node)));
-#else
-        _component_list.insert (_component_list.end (), _Component (_SCCNode (_node)));
-#endif
+        _component_list.push_back (_Component (_SCCNode (_node)));
 
         // Add _node to the new SCC
 #ifdef CGTL_DO_NOT_USE_STL

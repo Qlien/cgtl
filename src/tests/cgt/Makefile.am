@@ -1,4 +1,4 @@
-SUBDIRS = base search
+SUBDIRS = base search shortpath
 
 CXXTSRCS_GRAPH = graph_cxx.cc
 CXXTSRCS = $(CXXTSRCS_GRAPH)

@@ -32,6 +32,10 @@ AC_PATH_PROG([CXXTESTGEN], [cxxtestgen.pl], [/usr/local/cxxtest-3.10.1/cxxtest/c
 DIR_CXXTEST_INC_DEFAULT='/usr/local/cxxtest-3.10.1/cxxtest'
 #DIR_CXXTEST_INC_DEFAULT='/usr/include'
 
+DIR_GTEST=/usr/local/gtest-1.5.0
+DIR_GTEST_LIB_DEFAULT=$DIR_GTEST/lib
+DIR_GTEST_INC_DEFAULT=$DIR_GTEST/include
+
 # CxxTest code generator flags:
 CXXTFLAGS='--error-printer'
 
@@ -56,6 +60,25 @@ AC_ARG_WITH(cxxtest-includes,
                            [CPPFLAGS="$CPPFLAGS -I${DIR_CXXTEST_INC_DEFAULT}"])
 
 
+dnl **************************************************************************
+dnl Check for presence of Google C++ Testing Framework
+dnl **************************************************************************
+
+AC_ARG_WITH(gtest-includes,
+			AC_HELP_STRING([--with-gtest-includes=DIR],
+						   [Specify location of Google C++ Testing Framework headers]),
+						   [INCLUDES="$INCLUDES -I$withval"],
+						   [INCLUDES="$INCLUDES -I${DIR_GTEST_INC_DEFAULT}"])
+
+AC_ARG_WITH(gtest-libs,
+			AC_HELP_STRING([--with-gtest-libs=DIR],
+						   [Specify location of Google C++ Testing Framework libs]),
+						   [LIB_GTEST_PATH="$withval"],
+						   [LIB_GTEST_PATH="${DIR_GTEST_LIB_DEFAULT}"])
+
+LIBS="$LIBS -L${LIB_GTEST_PATH} -lgtest"
+
+
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 AC_SUBST(INCLUDES)
@@ -77,5 +100,8 @@ AC_CONFIG_FILES([Makefile
                  src/tests/cgt/base/iterator/Makefile
                  src/tests/cgt/search/Makefile
                  src/tests/cgt/search/breadth/Makefile
-                 src/tests/cgt/search/depth/Makefile])
+                 src/tests/cgt/search/depth/Makefile
+                 src/tests/cgt/shortpath/Makefile
+                 src/tests/cgt/shortpath/single/Makefile
+                 src/tests/cgt/shortpath/single/dijkstra/Makefile])
 AC_OUTPUT

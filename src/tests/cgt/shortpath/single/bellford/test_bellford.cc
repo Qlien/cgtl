@@ -50,10 +50,11 @@ TEST(Dijkstra, Basic) {
 
 	cgt::graph<int, int>::bfiterator itd = g.bfbegin (g.find (1));
 
-	/*
-
 	EXPECT_EQ(1, itd->vertex ().value ());
 	EXPECT_EQ(0, itd.info (*itd)->distance ());
+
+	/*
+
 
 	++itd;
 

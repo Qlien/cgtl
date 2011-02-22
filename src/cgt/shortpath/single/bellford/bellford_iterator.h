@@ -33,6 +33,8 @@
 #ifndef __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_ITERATOR_H_
 #define __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_ITERATOR_H_
 
+#include "cgt/shortpath/single/bellford/bellford_info.h"
+
 namespace cgt
 {
 	/*!
@@ -63,7 +65,7 @@ namespace cgt
 			namespace bellford
 			{
 				/*!
-				 * \class _BellmanFordIterator
+				 * \class _BellfordIterator
 				 * \brief An iterator that implements bellman-ford algorithm.
 				 * \author Leandro Costa
 				 * \date 2009
@@ -73,8 +75,11 @@ namespace cgt
 				 */
 
 				template<typename _TpVertex, typename _TpEdge, template<typename> class _TpIterator = cgt::base::iterator::_TpCommon>
-					class _BellmanFordIterator
+					class _BellfordIterator
 					{
+						public:
+							typedef _BellfordInfo<_TpVertex, _TpEdge>	_Info;
+
 						private:
 							typedef _GraphNode<_TpVertex, _TpEdge>	_Node;
 
@@ -85,7 +90,17 @@ namespace cgt
 #endif
 
 						public:
-							_BellmanFordIterator (const _NodeIterator& _it, const _NodeIterator& _it_begin, const _NodeIterator& _it_end) { }
+							_BellfordIterator (const _NodeIterator& _it, const _NodeIterator& _it_begin, const _NodeIterator& _it_end) : _ptr_node (&(*_it)) { }
+
+						public:
+							_Node& operator*() const { return *_ptr_node; }
+							_Node* operator->() const { return _ptr_node; }
+
+						public:
+							const _Info* const info (const _Node& _node) { return new _Info(); } //_get_info_by_node (&_node); }
+
+						private:
+							_Node*	_ptr_node;
 					};
 			}
 		}

@@ -326,7 +326,7 @@ namespace cgt
 
 		public:
 			/** bellman-ford iterator */
-			typedef cgt::shortpath::single::bellford::_BellmanFordIterator<_TpVertex, _TpEdge>	bfiterator;
+			typedef cgt::shortpath::single::bellford::_BellfordIterator<_TpVertex, _TpEdge>	bfiterator;
 
 
 

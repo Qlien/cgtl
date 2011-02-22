@@ -1,1 +1,1 @@
-SUBDIRS = dijkstra
+SUBDIRS = bellford dijkstra

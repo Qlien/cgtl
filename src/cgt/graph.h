@@ -49,6 +49,7 @@
 
 #include "cgt/search/depth/depth_iterator.h"
 #include "cgt/search/breadth/breadth_iterator.h"
+#include "cgt/shortpath/single/bellford/bellford_iterator.h"
 #include "cgt/shortpath/single/dijkstra/dijkstra_iterator.h"
 #include "cgt/minspantree/prim/prim_iterator.h"
 #include "cgt/minspantree/kruskal/kruskal_iterator.h"
@@ -324,6 +325,14 @@ namespace cgt
 
 
 		public:
+			/** bellman-ford iterator */
+			typedef cgt::shortpath::single::bellford::_BellmanFordIterator<_TpVertex, _TpEdge>	bfiterator;
+
+
+
+			bfiterator bfbegin (const iterator& _it) { return bfiterator (_it, _Base::begin (), _Base::end ()); }
+
+
 			/** dijkstra iterator */
 			typedef cgt::shortpath::single::dijkstra::_DijkstraIterator<_TpVertex, _TpEdge>                                 djiterator;
 			typedef cgt::shortpath::single::dijkstra::_DijkstraIterator<_TpVertex, _TpEdge, cgt::base::iterator::_TpConst>  const_djiterator;

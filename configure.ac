@@ -23,6 +23,7 @@ AC_CHECK_HEADERS([limits.h malloc.h stdlib.h string.h])
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 AC_C_CONST
+AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_CHECK_TYPES([ptrdiff_t])
 
@@ -103,5 +104,6 @@ AC_CONFIG_FILES([Makefile
                  src/tests/cgt/search/depth/Makefile
                  src/tests/cgt/shortpath/Makefile
                  src/tests/cgt/shortpath/single/Makefile
+                 src/tests/cgt/shortpath/single/bellford/Makefile
                  src/tests/cgt/shortpath/single/dijkstra/Makefile])
 AC_OUTPUT

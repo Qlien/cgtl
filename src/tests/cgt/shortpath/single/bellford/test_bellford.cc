@@ -35,20 +35,32 @@
 #include "cgt/graph.h"
 
 
-TEST(Dijkstra, Basic) {
-	cgt::graph<int, int> g;
-	cgt::graph<int, int>::iterator v1 = g.insert_vertex(1);
-	cgt::graph<int, int>::iterator v2 = g.insert_vertex(2);
-	cgt::graph<int, int>::iterator v3 = g.insert_vertex(3);
-	cgt::graph<int, int>::iterator v4 = g.insert_vertex(4);
+class BellFordTest : public testing::Test {
+	protected:
+		virtual void SetUp() {
+			g = new cgt::graph<int, int>;
 
-	g.insert_edge(2, v1, v2);
-	g.insert_edge(1, v1, v3);
+			cgt::graph<int, int>::iterator v1 = g->insert_vertex(1);
+			cgt::graph<int, int>::iterator v2 = g->insert_vertex(2);
+			cgt::graph<int, int>::iterator v3 = g->insert_vertex(3);
+			cgt::graph<int, int>::iterator v4 = g->insert_vertex(4);
 
-	g.insert_edge(10, v2, v4);
-	g.insert_edge(5, v3, v4);
+			g->insert_edge(2, v1, v2);
+			g->insert_edge(1, v1, v3);
 
-	cgt::graph<int, int>::bfiterator itd = g.bfbegin (g.find (1));
+			g->insert_edge(10, v2, v4);
+			g->insert_edge(5, v3, v4);
+		}
+
+		virtual void TearDown() {
+			delete g;
+		}
+
+		cgt::graph<int, int>* g;
+};
+
+TEST_F(BellFordTest, ShouldSetDistance0ToOrigin) {
+	cgt::graph<int, int>::bfiterator itd = g->bfbegin (g->find (1));
 
 	EXPECT_EQ(1, itd->vertex ().value ());
 	EXPECT_EQ(0, itd.info (*itd)->distance ());
@@ -71,6 +83,14 @@ TEST(Dijkstra, Basic) {
 	EXPECT_EQ(4, itd->vertex ().value ());
 	EXPECT_EQ(6, itd.info (*itd)->distance ());
 	*/
+}
+
+TEST_F(BellFordTest, ShouldReturnNextClosestNodeAfterOrigin) {
+	cgt::graph<int, int>::bfiterator itd = g->bfbegin (g->find (1));
+	++itd;
+
+	EXPECT_EQ(3, itd->vertex ().value ());
+	//EXPECT_EQ(0, itd.info (*itd)->distance ());
 }
 
 int main (int argc, char* argv[])

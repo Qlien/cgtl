@@ -81,6 +81,7 @@ namespace cgt
 							typedef _BellfordInfo<_TpVertex, _TpEdge>	_Info;
 
 						private:
+							typedef _BellfordIterator<_TpVertex, _TpEdge, _TpIterator>  _Self;
 							typedef _GraphNode<_TpVertex, _TpEdge>	_Node;
 
 #ifdef CGTL_DO_NOT_USE_STL
@@ -95,6 +96,7 @@ namespace cgt
 						public:
 							_Node& operator*() const { return *_ptr_node; }
 							_Node* operator->() const { return _ptr_node; }
+							_Self& operator++() { return *this; }
 
 						public:
 							const _Info* const info (const _Node& _node) { return new _Info(); } //_get_info_by_node (&_node); }

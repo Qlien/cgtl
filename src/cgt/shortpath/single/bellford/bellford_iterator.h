@@ -34,6 +34,7 @@
 #define __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_ITERATOR_H_
 
 #include "cgt/shortpath/single/bellford/bellford_info.h"
+#include "cgt/shortpath/single/bellford/bellford_info_list.h"
 
 namespace cgt
 {
@@ -84,6 +85,8 @@ namespace cgt
 							typedef _BellfordIterator<_TpVertex, _TpEdge, _TpIterator>  _Self;
 							typedef _GraphNode<_TpVertex, _TpEdge>	_Node;
 
+						private:
+							typedef _BellfordInfoList<_TpVertex, _TpEdge> _InfoList;
 #ifdef CGTL_DO_NOT_USE_STL
 							typedef typename cgt::base::list<_Node>::iterator	_NodeIterator;
 #else
@@ -91,7 +94,10 @@ namespace cgt
 #endif
 
 						public:
-							_BellfordIterator (const _NodeIterator& _it, const _NodeIterator& _it_begin, const _NodeIterator& _it_end) : _ptr_node (&(*_it)) { }
+							_BellfordIterator (const _NodeIterator& _it, const _NodeIterator& _it_begin, const _NodeIterator& _it_end) : _ptr_node (&(*_it)), _it_node (_it_begin), _it_node_end (_it_end) { }
+
+						private:
+							void _init ();
 
 						public:
 							_Node& operator*() const { return *_ptr_node; }
@@ -103,10 +109,36 @@ namespace cgt
 
 						private:
 							_Node*	_ptr_node;
+							_NodeIterator _it_node;
+							_NodeIterator _it_node_end;
+							_InfoList _infoList;
 					};
+
+
+				template<typename _TpVertex, typename _TpEdge, template<typename> class _TpIterator>
+					void _BellfordIterator<_TpVertex, _TpEdge, _TpIterator>::_init ()
+					{
+						/*
+						for (_NodeIterator it = _it_node; it != _it_node_end; ++it)
+						{
+							if (&(*it) == _ptr_node)
+								_infoList.push_back (_Info (*it));
+							else
+							_notVisitedInfoHeap.push (_Info (*it));
+						}
+
+						const _AdjList &adjList = _ptr_node->adjlist ();
+						_AdjListIterator itA = adjList.begin ();
+						_AdjListIterator itAEnd = adjList.end ();
+
+						for (itA = adjList.begin (); itA != itAEnd; ++itA)
+						_notVisitedInfoHeap.relax (&(itA->node ()), _TpEdge (), itA->edge (), &(_infoList.back ().node ()));
+						*/
+					}
+
+				}
 			}
 		}
 	}
-}
 
 #endif // __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_ITERATOR_H_

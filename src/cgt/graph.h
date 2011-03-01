@@ -330,7 +330,7 @@ namespace cgt
 
 
 
-			bfiterator bfbegin (const iterator& _it) { return bfiterator (_it, _Base::begin (), _Base::end ()); }
+			bfiterator bfbegin (const iterator& _it) { return bfiterator (_it, _Base::begin (), _Base::end (), _Base::_edgeList, _Base::size ()); }
 
 
 			/** dijkstra iterator */

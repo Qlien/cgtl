@@ -69,6 +69,7 @@ namespace cgt
               void _set_distance (const _TpEdge &_d) { _distance = _d; _inf = false; }
               const _TpEdge& distance () const { return _distance; }
               const bool &inf_distance () const { return _inf; }
+			  void set_origin () { _distance = 0; _inf = false; };
 
             private:
               _TpEdge _distance;
@@ -84,6 +85,8 @@ namespace cgt
         template<> _DijkstraDistance<long>::_DijkstraDistance ()            : _distance (0), _inf (true) { }
         template<> _DijkstraDistance<unsigned long>::_DijkstraDistance ()   : _distance (0), _inf (true) { }
         template<> _DijkstraDistance<std::string>::_DijkstraDistance ()     : _distance (""),_inf (true) { }
+
+        template<> void _DijkstraDistance<std::string>::set_origin () { _distance = ""; _inf = false; }
       }
     }
   }

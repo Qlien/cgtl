@@ -87,17 +87,29 @@ namespace cgt
 
 						private:
 							typedef _BellfordInfoList<_TpVertex, _TpEdge> _InfoList;
+							typedef _GraphVertex<_TpVertex>  _Vertex;
+							typedef _GraphEdge<_TpVertex, _TpEdge>  _Edge;
 #ifdef CGTL_DO_NOT_USE_STL
 							typedef typename cgt::base::list<_Node>::iterator	_NodeIterator;
+							typedef cgt::base::list<_Edge>  _EdgeList;
+							typedef typename cgt::base::list<_Edge>::const_iterator const_eiterator;
 #else
 							typedef typename std::list<_Node>::iterator	_NodeIterator;
+							typedef std::list<_Edge>    _EdgeList;
+							typedef typename std::list<_Edge>::const_iterator const_eiterator;
 #endif
 
 						public:
-							_BellfordIterator (const _NodeIterator& _it, const _NodeIterator& _it_begin, const _NodeIterator& _it_end) : _ptr_node (&(*_it)), _it_node (_it_begin), _it_node_end (_it_end) { }
+							_BellfordIterator (const _NodeIterator& _it, const _NodeIterator& _it_begin, const _NodeIterator& _it_end, const _EdgeList& _elist, const size_t num_vertices) : _ptr_node (&(*_it)), _it_node (_it_begin), _it_node_end (_it_end), _edgeList (_elist)
+						{
+							if (_ptr_node)
+								_init (num_vertices);
+						}
 
 						private:
-							void _init ();
+							void _init (const size_t num_vertices);
+							const _Info* const _get_info_by_node (const _Node* const _ptr_node);
+							const _Info* const _get_info_by_vertex (const _Vertex& _vertex);
 
 						public:
 							_Node& operator*() const { return *_ptr_node; }
@@ -105,28 +117,62 @@ namespace cgt
 							_Self& operator++() { return *this; }
 
 						public:
-							const _Info* const info (const _Node& _node) { return new _Info(); } //_get_info_by_node (&_node); }
+							const _Info* const info (const _Node& _node) { return _get_info_by_node (&_node); }
 
 						private:
 							_Node*	_ptr_node;
 							_NodeIterator _it_node;
 							_NodeIterator _it_node_end;
 							_InfoList _infoList;
+							const _EdgeList& _edgeList;
 					};
 
 
 				template<typename _TpVertex, typename _TpEdge, template<typename> class _TpIterator>
-					void _BellfordIterator<_TpVertex, _TpEdge, _TpIterator>::_init ()
+					void _BellfordIterator<_TpVertex, _TpEdge, _TpIterator>::_init (const size_t num_vertices)
 					{
-						/*
 						for (_NodeIterator it = _it_node; it != _it_node_end; ++it)
 						{
+							_Info _info (*it);
+
 							if (&(*it) == _ptr_node)
-								_infoList.push_back (_Info (*it));
-							else
-							_notVisitedInfoHeap.push (_Info (*it));
+								_info.set_origin ();
+
+							_infoList.push_back (_info);
 						}
 
+						for (size_t i = 0; i < num_vertices; i++)
+						{
+							const_eiterator itEnd = _edgeList.end ();
+
+							for (const_eiterator it = _edgeList.begin (); it != itEnd; ++it)
+							{
+								const _Vertex& v1 = it->v1 ();
+								const _Vertex& v2 = it->v2 ();
+
+								typename _InfoList::iterator _it_info_v1 = _infoList.get_by_vertex (v1);
+								typename _InfoList::iterator _it_info_v2 = _infoList.get_by_vertex (v2);
+
+								if (_it_info_v1->distance () + it->value () < _it_info_v2->distance ())
+								{
+									_it_info_v2->set_distance (_it_info_v1->distance () + it->value ());
+									_it_info_v2->set_previous (&(_it_info_v1->node ()));
+								}
+							}
+						}
+
+						/*
+						 * // Step 3: check for negative-weight cycles
+						 * for each edge uv in edges:
+						 *   u := uv.source
+						 *   v := uv.destination
+						 *   if u.distance + uv.weight < v.distance:
+						 *     error "Graph contains a negative-weight cycle"
+						 */
+
+						//_infoList.pop_front ();
+
+						/*
 						const _AdjList &adjList = _ptr_node->adjlist ();
 						_AdjListIterator itA = adjList.begin ();
 						_AdjListIterator itAEnd = adjList.end ();
@@ -136,9 +182,34 @@ namespace cgt
 						*/
 					}
 
-				}
+				template<typename _TpVertex, typename _TpEdge, template<typename> class _TpIterator>
+					const _BellfordInfo<_TpVertex, _TpEdge>* const _BellfordIterator<_TpVertex, _TpEdge, _TpIterator>::_get_info_by_node (const _Node* const _ptr_node)
+					{
+						const _Info* _ptr = NULL;
+
+						typename _InfoList::const_iterator _it = _infoList.get_by_node (_ptr_node);
+
+						if (_it != _infoList.end ())
+							_ptr = &(*_it);
+
+						return _ptr;
+					}
+
+				template<typename _TpVertex, typename _TpEdge, template<typename> class _TpIterator>
+					const _BellfordInfo<_TpVertex, _TpEdge>* const _BellfordIterator<_TpVertex, _TpEdge, _TpIterator>::_get_info_by_vertex (const _Vertex& _vertex)
+					{
+						const _Info* _ptr = NULL;
+
+						typename _InfoList::const_iterator _it = _infoList.get_by_vertex (_vertex);
+
+						if (_it != _infoList.end ())
+							_ptr = &(*_it);
+
+						return _ptr;
+					}
 			}
 		}
 	}
+}
 
 #endif // __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_ITERATOR_H_

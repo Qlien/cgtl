@@ -80,6 +80,7 @@ namespace cgt
 
             public:
               _Node& node () const { return _node; }
+			  void set_origin () { _distance.set_origin (); }
               void _set_distance (const _TpEdge &_d) { _distance._set_distance (_d); }
               const _TpEdge& distance () const { return _distance.distance (); }
               const bool &inf_distance () const { return _distance.inf_distance (); }

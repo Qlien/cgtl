@@ -30,8 +30,8 @@
  * $Revision: 124 $
  */
 
-#ifndef __CGTL__CGT_SHORTPATH_SINGLE_DIJKSTRA_DIJKSTRA_INFO_LIST_H_
-#define __CGTL__CGT_SHORTPATH_SINGLE_DIJKSTRA_DIJKSTRA_INFO_LIST_H_
+#ifndef __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_INFO_LIST_H_
+#define __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_INFO_LIST_H_
 
 #include "cgt/graph_node.h"
 #include "cgt/shortpath/single/bellford/bellford_info.h"
@@ -90,25 +90,32 @@ namespace cgt
 
           private:
             typedef _GraphNode<_TpVertex, _TpEdge>    _Node;
+            typedef _GraphVertex<_TpVertex>    			_Vertex;
             typedef _GraphEdge<_TpVertex, _TpEdge>    _Edge;
             typedef typename _Base::iterator          _Iterator;
 
           private:
             static const bool _has_node (const _Info& _info, const _Node& _node) { return (_info.node ().vertex () == _node.vertex ()); }
+            static const bool _has_vertex (const _Info& _info, const _Vertex& _vertex) { return (_info.node ().vertex () == _vertex); }
 
           public:
-            //_Iterator get_by_node (const _Node* const _ptr_node);
+            _Iterator get_by_node (const _Node* const _ptr_node);
+            _Iterator get_by_vertex (const _Vertex& _vertex);
             //_Iterator get_closest ();
             //void relax (const _Node* const _ptr_node, const _TpEdge& _distance, const _Edge& _edge, _Node* const _ptr_prev);
         };
 
-		/*
         template<typename _TpVertex, typename _TpEdge>
           typename _BellfordInfoList<_TpVertex, _TpEdge>::_Iterator _BellfordInfoList<_TpVertex, _TpEdge>::get_by_node (const _Node* const _ptr_node)
           {
             return find_if (_Base::begin (), _Base::end (), _has_node, *_ptr_node);
           }
-		  */
+
+        template<typename _TpVertex, typename _TpEdge>
+          typename _BellfordInfoList<_TpVertex, _TpEdge>::_Iterator _BellfordInfoList<_TpVertex, _TpEdge>::get_by_vertex (const _Vertex& _vertex)
+          {
+            return find_if (_Base::begin (), _Base::end (), _has_vertex, _vertex);
+          }
 
 		  /*
         template<typename _TpVertex, typename _TpEdge>
@@ -156,4 +163,4 @@ namespace cgt
 }
 
 
-#endif // __CGTL__CGT_SHORTPATH_SINGLE_DIJKSTRA_DIJKSTRA_INFO_LIST_H_
+#endif // __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_INFO_LIST_H_

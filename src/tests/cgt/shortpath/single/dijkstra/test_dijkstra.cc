@@ -50,8 +50,9 @@ TEST(Dijkstra, Basic) {
 
 	cgt::graph<int, int>::djiterator itd = g.djbegin (g.find (1));
 
-	EXPECT_EQ(1, itd->vertex ().value ());
+	EXPECT_FALSE(itd.info(*itd)->inf_distance ());
 	EXPECT_EQ(0, itd.info (*itd)->distance ());
+	EXPECT_EQ(1, itd->vertex ().value ());
 
 	++itd;
 

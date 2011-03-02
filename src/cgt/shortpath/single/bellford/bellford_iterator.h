@@ -33,6 +33,7 @@
 #ifndef __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_ITERATOR_H_
 #define __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_ITERATOR_H_
 
+#include "cgt/base/heap.h"
 #include "cgt/shortpath/single/bellford/bellford_info.h"
 #include "cgt/shortpath/single/bellford/bellford_info_list.h"
 
@@ -125,6 +126,7 @@ namespace cgt
 							_NodeIterator _it_node_end;
 							_InfoList _infoList;
 							const _EdgeList& _edgeList;
+							cgt::base::heap<_Info> _infoHeap;
 					};
 
 
@@ -171,6 +173,13 @@ namespace cgt
 						 */
 
 						//_infoList.pop_front ();
+
+						while (! _infoList.empty ())
+						{
+							_infoHeap.push (*(_infoList.pop_front ()));
+						}
+
+						_infoHeap.pop ();
 
 						/*
 						const _AdjList &adjList = _ptr_node->adjlist ();

@@ -72,6 +72,7 @@ namespace cgt
 
 			public:
 			  _Self& operator=(const _Self& _s);
+			  */
 
             public:
               const bool operator==(const _BellfordInfo& _d) const { return (_node.vertex () == _d._node.vertex ()); }
@@ -81,15 +82,12 @@ namespace cgt
               const bool operator>(const _BellfordInfo& _d) const { return ! operator<=(_d); }
               const bool operator>=(const _BellfordInfo& _d) const { return ! operator<(_d); }
 
-			  */
             public:
               _Node& node () const { return _node; }
 			  void set_origin () { _distance.set_origin (); }
               void set_distance (const _TpEdge &_d) { _distance._set_distance (_d); }
               const _TpEdge& distance () const { return _distance.distance (); }
-			  /*
               const bool &inf_distance () const { return _distance.inf_distance (); }
-			  */
               void set_previous (const _Node* const _ptr) { _ptr_previous = _ptr; }
 			  /*
               const _Node* const previous () const { return _ptr_previous; }

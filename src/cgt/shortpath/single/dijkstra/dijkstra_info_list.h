@@ -98,8 +98,8 @@ namespace cgt
 
           public:
             _Iterator get_by_node (const _Node* const _ptr_node);
-            _Iterator get_closest ();
-            void relax (const _Node* const _ptr_node, const _TpEdge& _distance, const _Edge& _edge, _Node* const _ptr_prev);
+            //_Iterator get_closest ();
+            //void relax (const _Node* const _ptr_node, const _TpEdge& _distance, const _Edge& _edge, _Node* const _ptr_prev);
         };
 
         template<typename _TpVertex, typename _TpEdge>
@@ -108,6 +108,7 @@ namespace cgt
             return find_if (_Base::begin (), _Base::end (), _has_node, *_ptr_node);
           }
 
+		/*
         template<typename _TpVertex, typename _TpEdge>
           typename _DijkstraInfoList<_TpVertex, _TpEdge>::_Iterator _DijkstraInfoList<_TpVertex, _TpEdge>::get_closest ()
           {
@@ -127,7 +128,9 @@ namespace cgt
 
             return it_ret;
           }
+		  */
 
+		/*
         template<typename _TpVertex, typename _TpEdge>
           void _DijkstraInfoList<_TpVertex, _TpEdge>::relax (const _Node* const _ptr_node, const _TpEdge& _distance, const _Edge& _edge, _Node* const _ptr_prev)
           {
@@ -144,6 +147,7 @@ namespace cgt
               }
             }
           }
+		  */
       }
     }
   }

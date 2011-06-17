@@ -40,6 +40,18 @@ class BellFordTest : public testing::Test {
 		virtual void SetUp() {
 			g = new cgt::graph<int, int>;
 
+			/*
+			 *      (2)
+			 * 1 --------- 2
+			 * |           |
+			 * |           |
+			 * |(1)        |(10)
+			 * |           |
+			 * |    (5)    |
+			 * 3 --------- 4
+			 *
+			 */
+
 			cgt::graph<int, int>::iterator v1 = g->insert_vertex(1);
 			cgt::graph<int, int>::iterator v2 = g->insert_vertex(2);
 			cgt::graph<int, int>::iterator v3 = g->insert_vertex(3);

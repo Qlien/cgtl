@@ -31,6 +31,7 @@
  */
 
 
+#include <iostream>
 #include "gtest/gtest.h"
 #include "cgt/graph.h"
 
@@ -75,6 +76,12 @@ TEST_F(BellFordTest, ShouldSetDistance0ToOrigin) {
 	cgt::graph<int, int>::bfiterator itd = g->bfbegin (g->find (1));
 
 	EXPECT_EQ(1, itd->vertex ().value ());
+	//int i = 0;// itd.info (*itd)->distance ();
+	//std::cout << std::endl << "i: " << i << std::endl;
+	std::cout << std::endl << "*itd: " << (*itd) << std::endl;
+	std::cout << std::endl << "info: " << (itd.info (*itd)) << std::endl;
+	std::cout << std::endl << "i: " << (itd.info (*itd)->distance ()) << std::endl;
+	//EXPECT_EQ(0, i);
 	EXPECT_EQ(0, itd.info (*itd)->distance ());
 
 	/*

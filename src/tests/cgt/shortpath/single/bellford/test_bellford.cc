@@ -31,7 +31,7 @@
  */
 
 
-#include <iostream>
+#include <glog/logging.h>
 #include "gtest/gtest.h"
 #include "cgt/graph.h"
 
@@ -53,10 +53,10 @@ class BellFordTest : public testing::Test {
 			 *
 			 */
 
-			cgt::graph<int, int>::iterator v1 = g->insert_vertex(1);
-			cgt::graph<int, int>::iterator v2 = g->insert_vertex(2);
-			cgt::graph<int, int>::iterator v3 = g->insert_vertex(3);
-			cgt::graph<int, int>::iterator v4 = g->insert_vertex(4);
+			v1 = g->insert_vertex(1);
+			v2 = g->insert_vertex(2);
+			v3 = g->insert_vertex(3);
+			v4 = g->insert_vertex(4);
 
 			g->insert_edge(2, v1, v2);
 			g->insert_edge(1, v1, v3);
@@ -70,22 +70,29 @@ class BellFordTest : public testing::Test {
 		}
 
 		cgt::graph<int, int>* g;
+		cgt::graph<int, int>::iterator v1, v2, v3, v4;
 };
 
 TEST_F(BellFordTest, ShouldSetDistance0ToOrigin) {
 	cgt::graph<int, int>::bfiterator itd = g->bfbegin (g->find (1));
 
 	EXPECT_EQ(1, itd->vertex ().value ());
-	//int i = 0;// itd.info (*itd)->distance ();
-	//std::cout << std::endl << "i: " << i << std::endl;
-	std::cout << std::endl << "*itd: " << (*itd) << std::endl;
-	std::cout << std::endl << "info: " << (itd.info (*itd)) << std::endl;
-	std::cout << std::endl << "i: " << (itd.info (*itd)->distance ()) << std::endl;
-	//EXPECT_EQ(0, i);
 	EXPECT_EQ(0, itd.info (*itd)->distance ());
+}
 
-	/*
+TEST_F(BellFordTest, ShouldReturnNextClosestNodeAfterOrigin) {
+	cgt::graph<int, int>::bfiterator itd = g->bfbegin (g->find (1));
+	++itd;
 
+	EXPECT_EQ(3, itd->vertex ().value ());
+	EXPECT_EQ(1, itd.info (*itd)->distance ());
+}
+
+TEST_F(BellFordTest, ShouldReturnNodesInDistanceOrder) {
+	cgt::graph<int, int>::bfiterator itd = g->bfbegin (g->find (1));
+
+	EXPECT_EQ(1, itd->vertex ().value ());
+	EXPECT_EQ(0, itd.info (*itd)->distance ());
 
 	++itd;
 
@@ -101,19 +108,21 @@ TEST_F(BellFordTest, ShouldSetDistance0ToOrigin) {
 
 	EXPECT_EQ(4, itd->vertex ().value ());
 	EXPECT_EQ(6, itd.info (*itd)->distance ());
-	*/
 }
 
-TEST_F(BellFordTest, ShouldReturnNextClosestNodeAfterOrigin) {
-	cgt::graph<int, int>::bfiterator itd = g->bfbegin (g->find (1));
-	++itd;
+TEST_F(BellFordTest, ShouldThrowExceptionIfGraphHasNegativeCycles) {
+	cgt::graph<int, int>::iterator v5 = g->insert_vertex(5);
 
-	EXPECT_EQ(3, itd->vertex ().value ());
-	//EXPECT_EQ(0, itd.info (*itd)->distance ());
+	g->insert_edge(-1, v1, v5);
+	g->insert_edge(-1, v5, v1);
+
+	ASSERT_THROW(g->bfbegin (g->find (1)), cgt::shortpath::single::bellford::negcycl_except);
 }
+
 
 int main (int argc, char* argv[])
 {
+	google::InitGoogleLogging(argv[0]);
 	::testing::InitGoogleTest (&argc, argv);
 	return RUN_ALL_TESTS();
 }

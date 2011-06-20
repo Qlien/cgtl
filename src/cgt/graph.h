@@ -312,16 +312,12 @@ namespace cgt
 			typedef _graph_base<_TpVertex, _TpEdge, _TpGraphType> _Base;
 
 		public:
-			//typedef _GraphVertex<_TpVertex>           vertex;
 			typedef _GraphEdge<_TpVertex, _TpEdge>    edge;
 			typedef _GraphAdjList<_TpVertex, _TpEdge> adjlist;
 
-			typedef typename _Base::iterator          iterator;
-			typedef typename _Base::const_iterator    const_iterator;
-
 		public:
 			void insert_edge (const _TpEdge &_e, const _TpVertex &_v1, const _TpVertex &_v2) { _insert_edge (_e, _v1, _v2); }
-			void insert_edge (const _TpEdge& _e, iterator& _it_v1, iterator& _it_v2) { _insert_edge (_e, _it_v1, _it_v2); }
+			void insert_edge (const _TpEdge& _e, typename _Base::iterator& _it_v1, typename _Base::iterator& _it_v2) { _insert_edge (_e, _it_v1, _it_v2); }
 
 
 		public:
@@ -330,7 +326,7 @@ namespace cgt
 
 
 
-			bfiterator bfbegin (const iterator& _it) { return bfiterator (_it, _Base::begin (), _Base::end (), _Base::_edgeList, _Base::size ()); }
+			bfiterator bfbegin (const typename _Base::iterator& _it) { return bfiterator (_it, _Base::begin (), _Base::end (), _Base::_edgeList, _Base::size ()); }
 
 
 			/** dijkstra iterator */
@@ -346,10 +342,10 @@ namespace cgt
 #endif
 
 			djiterator djbegin () { return djiterator (_Base::begin (), _Base::begin (), _Base::end ()); }
-			djiterator djbegin (const iterator& _it) { return djiterator (_it, _Base::begin (), _Base::end ()); }
+			djiterator djbegin (const typename _Base::iterator& _it) { return djiterator (_it, _Base::begin (), _Base::end ()); }
 			djiterator djend () { return djiterator (NULL); }
 			const_djiterator djbegin () const { return const_djiterator (_Base::begin (), _Base::begin (), _Base::end ()); }
-			const_djiterator djbegin (const iterator& _it) const { return const_djiterator (_it, _Base::begin (), _Base::end ()); }
+			const_djiterator djbegin (const typename _Base::iterator& _it) const { return const_djiterator (_it, _Base::begin (), _Base::end ()); }
 			const_djiterator djend () const { return const_djiterator (NULL); }
 
 			djiiterator djibegin (djiterator &_it) { return djiiterator (_it.info_begin ()); }
@@ -374,12 +370,9 @@ namespace cgt
 				typedef _GraphNode<_TpVertex, void>    node;
 				typedef _GraphAdjList<_TpVertex, void> adjlist;
 
-				typedef typename _Base::iterator          iterator;
-				typedef typename _Base::const_iterator    const_iterator;
-
 			public:
 				void insert_edge (const _TpVertex &_v1, const _TpVertex &_v2) { _insert_edge (_v1, _v2); }
-				void insert_edge (iterator& _it_v1, iterator& _it_v2) { _insert_edge (_it_v1, _it_v2); }
+				void insert_edge (typename _Base::iterator& _it_v1, typename _Base::iterator& _it_v2) { _insert_edge (_it_v1, _it_v2); }
 		};
 }
 

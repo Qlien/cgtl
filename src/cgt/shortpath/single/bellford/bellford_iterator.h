@@ -33,9 +33,11 @@
 #ifndef __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_ITERATOR_H_
 #define __CGTL__CGT_SHORTPATH_SINGLE_BELLFORD_BELLFORD_ITERATOR_H_
 
+#include <glog/logging.h>
 #include "cgt/base/heap.h"
 #include "cgt/shortpath/single/bellford/bellford_info.h"
 #include "cgt/shortpath/single/bellford/bellford_info_list.h"
+#include "cgt/shortpath/single/bellford/negcycl_except.h"
 
 namespace cgt
 {
@@ -103,8 +105,12 @@ namespace cgt
 						public:
 							_BellfordIterator (const _NodeIterator& _it, const _NodeIterator& _it_begin, const _NodeIterator& _it_end, const _EdgeList& _elist, const size_t num_vertices) : _ptr_node (&(*_it)), _it_node (_it_begin), _it_node_end (_it_end), _edgeList (_elist)
 						{
+							DLOG(INFO) << "_ptr_node: " << _ptr_node << ", num_vertices: " << num_vertices;
+
 							if (_ptr_node)
 								_init (num_vertices);
+
+							DLOG(INFO) << "_infoHeap.size(): " << _infoHeap.size();
 						}
 
 						private:
@@ -115,7 +121,14 @@ namespace cgt
 						public:
 							_Node& operator*() const { return *_ptr_node; }
 							_Node* operator->() const { return _ptr_node; }
-							_Self& operator++() { return *this; }
+
+							_Self& operator++()
+							{
+								_infoList.push_back(*(_infoHeap.pop ()));
+								_ptr_node = &(_infoList.back ().node ());
+
+								return *this;
+							}
 
 						public:
 							const _Info* const info (const _Node& _node) { return _get_info_by_node (&_node); }
@@ -138,13 +151,17 @@ namespace cgt
 							_Info _info (*it);
 
 							if (&(*it) == _ptr_node)
+							{
+								DLOG(INFO) << "_info.set_origin ()";
 								_info.set_origin ();
+							}
 
 							_infoList.push_back (_info);
 						}
 
 						for (size_t i = 0; i < num_vertices; i++)
 						{
+							//DLOG(INFO) << "iteration " << i;
 							const_eiterator itEnd = _edgeList.end ();
 
 							for (const_eiterator it = _edgeList.begin (); it != itEnd; ++it)
@@ -152,13 +169,21 @@ namespace cgt
 								const _Vertex& v1 = it->v1 ();
 								const _Vertex& v2 = it->v2 ();
 
+								//DLOG(INFO) << "v1: " << v1.value () << ", v2: " << v2.value ();
+
 								typename _InfoList::iterator _it_info_v1 = _infoList.get_by_vertex (v1);
 								typename _InfoList::iterator _it_info_v2 = _infoList.get_by_vertex (v2);
 
-								if (_it_info_v1->distance () + it->value () < _it_info_v2->distance ())
+								//DLOG(INFO) << "v1 infinite: " << _it_info_v1->inf_distance ();
+								//DLOG(INFO) << "v1 distance: " << _it_info_v1->distance ();
+
+								//DLOG(INFO) << "v2 distance: " << _it_info_v2->distance ();
+
+								if (! _it_info_v1->inf_distance () && (_it_info_v2->inf_distance () || (_it_info_v1->distance () + it->value () < _it_info_v2->distance ())))
 								{
 									_it_info_v2->set_distance (_it_info_v1->distance () + it->value ());
 									_it_info_v2->set_previous (&(_it_info_v1->node ()));
+									//DLOG(INFO) << _it_info_v1->node ().vertex ().value () << ", " << _it_info_v2->node ().vertex ().value ();
 								}
 							}
 						}
@@ -172,23 +197,26 @@ namespace cgt
 						 *     error "Graph contains a negative-weight cycle"
 						 */
 
-						//_infoList.pop_front ();
+						const_eiterator itEnd = _edgeList.end ();
 
+						for (const_eiterator it = _edgeList.begin (); it != itEnd; ++it)
+						{
+							const _Vertex& v1 = it->v1 ();
+							const _Vertex& v2 = it->v2 ();
+
+							typename _InfoList::iterator _it_info_v1 = _infoList.get_by_vertex (v1);
+							typename _InfoList::iterator _it_info_v2 = _infoList.get_by_vertex (v2);
+
+							if (! _it_info_v1->inf_distance () && ! _it_info_v2->inf_distance () && _it_info_v1->distance () + it->value () < _it_info_v2->distance ())
+								throw cgt::shortpath::single::bellford::negcycl_except ("Negative cycle found");
+						}
+							
 						while (! _infoList.empty ())
 						{
 							_infoHeap.push (*(_infoList.pop_front ()));
 						}
 
-						_infoHeap.pop ();
-
-						/*
-						const _AdjList &adjList = _ptr_node->adjlist ();
-						_AdjListIterator itA = adjList.begin ();
-						_AdjListIterator itAEnd = adjList.end ();
-
-						for (itA = adjList.begin (); itA != itAEnd; ++itA)
-						_notVisitedInfoHeap.relax (&(itA->node ()), _TpEdge (), itA->edge (), &(_infoList.back ().node ()));
-						*/
+						_infoList.push_back(*(_infoHeap.pop ()));
 					}
 
 				template<typename _TpVertex, typename _TpEdge, template<typename> class _TpIterator>
@@ -196,6 +224,7 @@ namespace cgt
 					{
 						const _Info* _ptr = NULL;
 
+						DLOG(INFO) << "_infoList.size(): " << _infoList.size();
 						typename _InfoList::const_iterator _it = _infoList.get_by_node (_ptr_node);
 
 						if (_it != _infoList.end ())

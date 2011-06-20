@@ -33,6 +33,10 @@ AC_PATH_PROG([CXXTESTGEN], [cxxtestgen.pl], [/usr/local/cxxtest-3.10.1/cxxtest/c
 DIR_CXXTEST_INC_DEFAULT='/usr/local/cxxtest-3.10.1/cxxtest'
 #DIR_CXXTEST_INC_DEFAULT='/usr/include'
 
+DIR_GLOG=/usr/local/glog-0.3.1
+DIR_GLOG_LIB_DEFAULT=$DIR_GLOG/lib
+DIR_GLOG_INC_DEFAULT=$DIR_GLOG/include
+
 #DIR_GTEST=/usr/local/gtest-1.5.0
 #DIR_GTEST_LIB_DEFAULT=$DIR_GTEST/lib
 #DIR_GTEST_INC_DEFAULT=$DIR_GTEST/include
@@ -60,6 +64,25 @@ AC_ARG_WITH(cxxtest-includes,
                            [Specify location of cxxtest headers]),
                            [CPPFLAGS="$CPPFLAGS -I$withval"],
                            [CPPFLAGS="$CPPFLAGS -I${DIR_CXXTEST_INC_DEFAULT}"])
+
+
+dnl **************************************************************************
+dnl Check for presence of Google C++ Logging Library (glog)
+dnl **************************************************************************
+
+AC_ARG_WITH(glog-includes,
+			AC_HELP_STRING([--with-glog-includes=DIR],
+						   [Specify location of Google C++ Logging Library headers]),
+						   [INCLUDES="$INCLUDES -I$withval"],
+						   [INCLUDES="$INCLUDES -I${DIR_GLOG_INC_DEFAULT}"])
+
+AC_ARG_WITH(glog-libs,
+			AC_HELP_STRING([--with-glog-libs=DIR],
+						   [Specify location of Google C++ Logging Library libs]),
+						   [LIB_GLOG_PATH="$withval"],
+						   [LIB_GLOG_PATH="${DIR_GLOG_LIB_DEFAULT}"])
+
+LIBS="$LIBS -L${LIB_GLOG_PATH} -lglog"
 
 
 dnl **************************************************************************
